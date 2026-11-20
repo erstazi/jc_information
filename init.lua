@@ -1,3 +1,4 @@
+
 local modname = core.get_current_modname()
 local modpath = core.get_modpath(modname)
 local worldpath = core.get_worldpath()
@@ -98,8 +99,8 @@ end
 local function export_items()
   local items = {}
 
-  for itemname, definition in pairs(core.registered_items) do
-    local record = {
+  for itemname, definition in pairs(core.registered_items or {}) do
+    items[#items + 1] = {
       name = itemname,
       mod = get_modname(itemname),
       category = classify_item(itemname, definition),
@@ -116,8 +117,6 @@ local function export_items()
       _doc_items_longdesc = definition._doc_items_longdesc,
       _doc_items_usagehelp = definition._doc_items_usagehelp,
     }
-
-    items[#items + 1] = record
   end
 
   table.sort(items, function(a, b)
@@ -130,8 +129,9 @@ end
 local function export_entities()
   local entities = {}
 
-  for entityname, definition in pairs(core.registered_entities) do
+  for entityname, definition in pairs(core.registered_entities or {}) do
     local properties = definition.initial_properties or {}
+
     entities[#entities + 1] = {
       name = entityname,
       mod = get_modname(entityname),
@@ -157,12 +157,153 @@ local function export_entities()
   return entities
 end
 
+local function get_recipe_time(method, itemname, expected_output)
+  if type(core.get_craft_result) ~= "function" or type(ItemStack) ~= "function" then
+    return nil
+  end
+
+  local ok, output = pcall(core.get_craft_result, {
+    method = method,
+    width = 1,
+    items = { ItemStack(itemname) },
+  })
+
+  if not ok or type(output) ~= "table" then
+    return nil
+  end
+
+  if type(output.time) ~= "number" or output.time <= 0 then
+    return nil
+  end
+
+  if expected_output then
+    local result = ItemStack(output.item or "")
+    if result:is_empty() then
+      return nil
+    end
+
+    local expected = ItemStack(expected_output)
+    if result:get_name() ~= expected:get_name() then
+      return nil
+    end
+  end
+
+  return output.time
+end
+
+local function get_group_members(group_name)
+  local members = {}
+
+  for itemname, definition in pairs(core.registered_items or {}) do
+    local groups = definition.groups or {}
+
+    if (groups[group_name] or 0) > 0 then
+      members[#members + 1] = itemname
+    end
+  end
+
+  table.sort(members)
+  return members
+end
+
 local function export_crafts()
   local crafts = {}
+  local seen = {}
 
-  for _, definition in ipairs(core.registered_crafts) do
-    crafts[#crafts + 1] = copy_table(definition)
+  if type(core.get_all_craft_recipes) ~= "function" then
+    log("error", "This Luanti version does not provide get_all_craft_recipes(); recipes were not exported")
+    return crafts
   end
+
+  local function add_recipe(record)
+    local key = core.write_json(record, false)
+
+    if key and not seen[key] then
+      seen[key] = true
+      crafts[#crafts + 1] = record
+    end
+  end
+
+  for itemname in pairs(core.registered_items or {}) do
+    local recipes = core.get_all_craft_recipes(itemname)
+
+    if type(recipes) == "table" then
+      for _, definition in ipairs(recipes) do
+        local record = copy_table(definition) or {}
+        record.output_item = itemname
+
+        if record.method == "normal" then
+          record.recipe_width = record.width
+        end
+
+        record.width = nil
+
+        if record.method == "cooking" then
+          local input = type(record.items) == "table" and record.items[1] or nil
+          local time = nil
+
+          if type(input) == "string" and input ~= "" then
+            if input:match("^group:") then
+              local group_name = input:sub(7)
+
+              for _, member in ipairs(get_group_members(group_name)) do
+                time = get_recipe_time("cooking", member, itemname)
+
+                if time then
+                  record.cook_input = member
+                  break
+                end
+              end
+            else
+              time = get_recipe_time("cooking", input, itemname)
+
+              if time then
+                record.cook_input = input
+              end
+            end
+          end
+
+          record.cook_time_seconds = time
+
+        elseif record.method == "fuel" then
+          record.burn_time_seconds = record.time
+        end
+
+        record.time = nil
+        add_recipe(record)
+      end
+    end
+  end
+
+  -- Find fuel recipes even on versions that do not return them
+  -- through get_all_craft_recipes().
+  for itemname in pairs(core.registered_items or {}) do
+    local time = get_recipe_time("fuel", itemname)
+
+    if time then
+      add_recipe({
+        method = "fuel",
+        output_item = "",
+        items = { itemname },
+        burn_time_seconds = time,
+      })
+    end
+  end
+
+  table.sort(crafts, function(a, b)
+    local a_output = a.output_item or ""
+    local b_output = b.output_item or ""
+
+    if a_output == b_output then
+      if (a.method or "") == (b.method or "") then
+        return core.write_json(a, false) < core.write_json(b, false)
+      end
+
+      return (a.method or "") < (b.method or "")
+    end
+
+    return a_output < b_output
+  end)
 
   return crafts
 end
@@ -178,12 +319,14 @@ local function write_export()
   }
 
   local json = core.write_json(data, true)
+
   if not json then
     log("error", "Could not encode export as JSON")
     return false
   end
 
   local file, error_message = io.open(output_file, "w")
+
   if not file then
     log("error", "Could not open " .. output_file .. " for writing: " .. tostring(error_message))
     return false
@@ -193,14 +336,17 @@ local function write_export()
   file:close()
 
   log("action", "Exported " .. #data.items .. " items, " .. #data.entities .. " entities, and " .. #data.crafts .. " recipes to " .. output_file)
+
   return true
 end
 
+-- Automatically export once every mod has finished registering.
 core.register_on_mods_loaded(function()
-  log("action", "All mods have finished registering; collecting game information")
+  log("action", "All mods have finished registering; generating information export")
   write_export()
 end)
 
+-- Allow administrators to regenerate the export manually.
 core.register_chatcommand("jc_information_export", {
   description = "Regenerate the JustCraft item and recipe data export",
   privs = { server = true },
@@ -208,6 +354,7 @@ core.register_chatcommand("jc_information_export", {
     if write_export() then
       return true, "JustCraft information export completed."
     end
+
     return false, "Export failed. Check the server log."
   end,
 })
