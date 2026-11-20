@@ -341,10 +341,10 @@ local function write_export()
 end
 
 -- Automatically export once every mod has finished registering.
-core.register_on_mods_loaded(function()
-  log("action", "All mods have finished registering; generating information export")
-  write_export()
-end)
+-- core.register_on_mods_loaded(function()
+  -- log("action", "All mods have finished registering; generating information export")
+  -- write_export()
+-- end)
 
 -- Allow administrators to regenerate the export manually.
 core.register_chatcommand("jc_information_export", {
