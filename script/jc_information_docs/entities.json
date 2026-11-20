@@ -1,0 +1,3329 @@
+[
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "physical": true
+    },
+    "mod": "3d_armor_stand",
+    "name": "3d_armor_stand:armor_entity"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.5,
+        -0.5,
+        -0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "physical": true
+    },
+    "mod": "__builtin",
+    "name": "__builtin:falling_node"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -0.3,
+        -0.3,
+        0.3,
+        0.3,
+        0.3
+      ],
+      "hp_max": 1.0,
+      "physical": true
+    },
+    "mod": "__builtin",
+    "name": "__builtin:item"
+  },
+  {
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:angelfish"
+  },
+  {
+    "damage": 0.0,
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:bat"
+  },
+  {
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:bird"
+  },
+  {
+    "hp_max": 1.0,
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:bird_egg_entity"
+  },
+  {
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:blue_tang"
+  },
+  {
+    "damage": 1.0,
+    "drops": null,
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:cat"
+  },
+  {
+    "damage": 0.0,
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "animalia:poultry_raw"
+      },
+      {
+        "chance": 2.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "animalia:feather"
+      }
+    ],
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:chicken"
+  },
+  {
+    "hp_max": 1.0,
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:chicken_egg_entity"
+  },
+  {
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:clownfish"
+  },
+  {
+    "damage": 0.0,
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "animalia:beef_raw"
+      },
+      {
+        "chance": 2.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "animalia:leather"
+      }
+    ],
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:cow"
+  },
+  {
+    "damage": 2.0,
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:fox"
+  },
+  {
+    "damage": 2.0,
+    "drops": null,
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:frog"
+  },
+  {
+    "damage": 6.0,
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "animalia:pelt_bear"
+      }
+    ],
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:grizzly_bear"
+  },
+  {
+    "damage": 8.0,
+    "drops": [
+      {
+        "chance": 2.0,
+        "max": 4.0,
+        "min": 1.0,
+        "name": "animalia:leather"
+      }
+    ],
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:horse"
+  },
+  {
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:lasso_entity"
+  },
+  {
+    "damage": 2.0,
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:opossum"
+  },
+  {
+    "damage": 2.0,
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "animalia:feather"
+      }
+    ],
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:owl"
+  },
+  {
+    "damage": 2.0,
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "animalia:porkchop_raw"
+      }
+    ],
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:pig"
+  },
+  {
+    "damage": 0.0,
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "animalia:rat_raw"
+      }
+    ],
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:rat"
+  },
+  {
+    "damage": 0.0,
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "animalia:venison_raw"
+      },
+      {
+        "chance": 2.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "animalia:leather"
+      }
+    ],
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:reindeer"
+  },
+  {
+    "damage": 0.0,
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "animalia:mutton_raw"
+      },
+      {
+        "chance": 2.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "wool:white"
+      }
+    ],
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:sheep"
+  },
+  {
+    "damage": 2.0,
+    "drops": [
+      {
+        "chance": 2.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "animalia:feather"
+      }
+    ],
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:song_bird"
+  },
+  {
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:tied_lasso_entity"
+  },
+  {
+    "damage": 0.0,
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:tropical_fish"
+  },
+  {
+    "damage": 0.0,
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 4.0,
+        "min": 1.0,
+        "name": "animalia:poultry_raw"
+      },
+      {
+        "chance": 2.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "animalia:feather"
+      }
+    ],
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:turkey"
+  },
+  {
+    "hp_max": 1.0,
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:turkey_egg_entity"
+  },
+  {
+    "damage": 4.0,
+    "initial_properties": null,
+    "mod": "animalia",
+    "name": "animalia:wolf"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:beluga"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:blackbird"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:divingbeetle"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:frog"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:hare"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:locust"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:moose"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:owl"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:rat"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:reindeer"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:spider"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:stingray"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:tiger"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "animalworld",
+    "name": "animalworld:volverine"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "anvil",
+    "name": "anvil:item"
+  },
+  {
+    "armor_groups": {
+      "fleshy": 100.0
+    },
+    "initial_properties": {
+      "collisionbox": [
+        -0.55,
+        -0.55,
+        -0.55,
+        0.55,
+        0.55,
+        0.55
+      ],
+      "hp_max": 1.0
+    },
+    "mod": "areas",
+    "name": "areas:pos1"
+  },
+  {
+    "armor_groups": {
+      "fleshy": 100.0
+    },
+    "initial_properties": {
+      "collisionbox": [
+        -0.55,
+        -0.55,
+        -0.55,
+        0.55,
+        0.55,
+        0.55
+      ],
+      "hp_max": 1.0
+    },
+    "mod": "areas",
+    "name": "areas:pos2"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.5,
+        -0.35,
+        -0.5,
+        0.5,
+        0.3,
+        0.5
+      ],
+      "physical": true
+    },
+    "mod": "boats",
+    "name": "boats:boat"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.5,
+        -0.5,
+        -0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "physical": false
+    },
+    "mod": "carts",
+    "name": "carts:cart"
+  },
+  {
+    "hp_max": 1.0,
+    "initial_properties": null,
+    "mod": "cottages",
+    "name": "cottages:bucket_entity"
+  },
+  {
+    "initial_properties": null,
+    "mod": "decor_api",
+    "name": "decor_api:seat_entity"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.4374,
+        -0.4374,
+        0.0,
+        0.4374,
+        0.4374,
+        0.0
+      ],
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "drawers",
+    "name": "drawers:visual"
+  },
+  {
+    "initial_properties": {
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:circle"
+  },
+  {
+    "initial_properties": {
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:copy"
+  },
+  {
+    "initial_properties": {
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:fill"
+  },
+  {
+    "initial_properties": {
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:line"
+  },
+  {
+    "initial_properties": {
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:mirror"
+  },
+  {
+    "initial_properties": {
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:mirror_border"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:paste_preview_base"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:place_preview"
+  },
+  {
+    "initial_properties": {
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:polygon"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:polygon_preview"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:preview_node"
+  },
+  {
+    "initial_properties": {
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:replace"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "edit",
+    "name": "edit:select_preview"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.1,
+        -0.1,
+        -0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "physical": false
+    },
+    "mod": "ethereal",
+    "name": "ethereal:bob_entity"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.2,
+        -0.2,
+        -0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "physical": true
+    },
+    "mod": "farming",
+    "name": "farming:hoebomb_entity"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": {
+        "fixed": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "type": "fixed"
+      }
+    },
+    "mod": "homedecor",
+    "name": "homedecor:mesh_desk_fan"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.01,
+        -0.01,
+        -0.01,
+        0.01,
+        0.01,
+        0.01
+      ]
+    },
+    "mod": "homedecor_seating",
+    "name": "homedecor_seating:seat"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "itemframes",
+    "name": "itemframes:item"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.1,
+        -0.1,
+        -0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "physical": true
+    },
+    "mod": "jc_special",
+    "name": "jc_special:rhino_bullet"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.1,
+        -0.1,
+        -0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "physical": false
+    },
+    "mod": "jc_special",
+    "name": "jc_special:thrown_snow"
+  },
+  {
+    "damage": 2.0,
+    "description": "jc_special:zombie_1arm",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 25.0,
+        "min": 3.0,
+        "name": "bonemeal:bone"
+      },
+      {
+        "chance": 2.0,
+        "max": 5.0,
+        "min": 3.0,
+        "name": "default:dirt"
+      },
+      {
+        "chance": 4.0,
+        "max": 5.0,
+        "min": 2.0,
+        "name": "default:apple"
+      },
+      {
+        "chance": 10.0,
+        "max": 4.0,
+        "min": 1.0,
+        "name": "default:clay_lump"
+      },
+      {
+        "chance": 15.0,
+        "max": 5.0,
+        "min": 1.0,
+        "name": "bonemeal:bone_block"
+      },
+      {
+        "chance": 2.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "bones:bones"
+      }
+    ],
+    "hp_min": 3.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.4,
+        -1.0,
+        -0.4,
+        0.4,
+        0.8,
+        0.4
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 15.0,
+      "physical": true
+    },
+    "mod": "jc_special",
+    "name": "jc_special:zombie_1arm"
+  },
+  {
+    "damage": 1.0,
+    "description": "jc_special:zombie_crawler",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 25.0,
+        "min": 3.0,
+        "name": "bonemeal:bone"
+      },
+      {
+        "chance": 2.0,
+        "max": 5.0,
+        "min": 3.0,
+        "name": "default:dirt"
+      },
+      {
+        "chance": 4.0,
+        "max": 5.0,
+        "min": 2.0,
+        "name": "default:apple"
+      },
+      {
+        "chance": 10.0,
+        "max": 4.0,
+        "min": 1.0,
+        "name": "default:clay_lump"
+      },
+      {
+        "chance": 15.0,
+        "max": 5.0,
+        "min": 1.0,
+        "name": "bonemeal:bone_block"
+      },
+      {
+        "chance": 2.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "bones:bones"
+      }
+    ],
+    "hp_min": 1.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.5,
+        -0.5,
+        -0.4,
+        0.5,
+        0.2,
+        0.4
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 10.0,
+      "physical": true
+    },
+    "mod": "jc_special",
+    "name": "jc_special:zombie_crawler"
+  },
+  {
+    "damage": 1.0,
+    "description": "jc_special:zombie_normal",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 25.0,
+        "min": 3.0,
+        "name": "bonemeal:bone"
+      },
+      {
+        "chance": 2.0,
+        "max": 5.0,
+        "min": 3.0,
+        "name": "default:dirt"
+      },
+      {
+        "chance": 4.0,
+        "max": 5.0,
+        "min": 2.0,
+        "name": "default:apple"
+      },
+      {
+        "chance": 10.0,
+        "max": 4.0,
+        "min": 1.0,
+        "name": "default:clay_lump"
+      },
+      {
+        "chance": 15.0,
+        "max": 5.0,
+        "min": 1.0,
+        "name": "bonemeal:bone_block"
+      },
+      {
+        "chance": 2.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "bones:bones"
+      }
+    ],
+    "hp_min": 1.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.4,
+        -1.0,
+        -0.4,
+        0.4,
+        0.8,
+        0.4
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 10.0,
+      "physical": true
+    },
+    "mod": "jc_special",
+    "name": "jc_special:zombie_normal"
+  },
+  {
+    "initial_properties": {
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:_pos"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:balrog"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:bee"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:bunny"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:castle_guard"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:chicken"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:cow"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:dirt_monster"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:dungeon_master"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:elmo"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:elmo_large"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:handsome_squidward"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:kitten"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:lava_flan"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:mese_monster"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:michael_jackson"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:nether_dragon"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:netherman"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:oerkki"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:priest"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:pumba"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:rat"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:rhino"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sand_monster"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_black"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_blue"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_brown"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_cyan"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_dark_green"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_dark_grey"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_green"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_grey"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_magenta"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_orange"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_pink"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_red"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_violet"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_white"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:sheep_yellow"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:spider"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:stone_monster"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:tree_monster"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:trooper"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:unggoy"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs",
+    "name": "mobs:unggoy_large"
+  },
+  {
+    "damage": 0.0,
+    "description": "\u001b(T@mobs_animal)Bee\u001bE",
+    "drops": [
+      {
+        "chance": 2.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "mobs:honey"
+      }
+    ],
+    "hp_min": 1.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.2,
+        0.2,
+        -0.2,
+        0.2,
+        0.5,
+        0.2
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 2.0,
+      "physical": true
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:bee"
+  },
+  {
+    "damage": 0.0,
+    "description": "\u001b(T@mobs_animal)Bunny\u001bE",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "mobs:rabbit_raw"
+      },
+      {
+        "chance": 1.0,
+        "max": 1.0,
+        "min": 0.0,
+        "name": "mobs:rabbit_hide"
+      }
+    ],
+    "hp_min": 1.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.268,
+        -0.5,
+        -0.268,
+        0.268,
+        0.167,
+        0.268
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 4.0,
+      "physical": true
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:bunny"
+  },
+  {
+    "damage": 0.0,
+    "description": "\u001b(T@mobs_animal)Chicken\u001bE",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "mobs:chicken_raw"
+      },
+      {
+        "chance": 1.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "mobs:chicken_feather"
+      }
+    ],
+    "hp_min": 5.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -0.75,
+        -0.3,
+        0.3,
+        0.1,
+        0.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 10.0,
+      "physical": true
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:chicken"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:cow"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.1,
+        -0.1,
+        -0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "physical": true
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:egg_entity"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:kitten"
+  },
+  {
+    "damage": 3.0,
+    "description": "\u001b(T@mobs_animal)Panda\u001bE",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "mobs:meat_raw"
+      }
+    ],
+    "hp_min": 10.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.4,
+        -0.45,
+        -0.4,
+        0.4,
+        0.45,
+        0.4
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 24.0,
+      "physical": true
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:panda"
+  },
+  {
+    "damage": 0.0,
+    "description": "\u001b(T@mobs_animal)Penguin\u001bE",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "mobs:meat_raw"
+      }
+    ],
+    "hp_min": 5.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.2,
+        -0.0,
+        -0.2,
+        0.2,
+        0.5,
+        0.2
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 10.0,
+      "physical": true
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:penguin"
+  },
+  {
+    "damage": 2.0,
+    "description": "\u001b(T@mobs_animal)Warthog\u001bE",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "mobs:pork_raw"
+      }
+    ],
+    "hp_min": 10.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.4,
+        -0.01,
+        -0.4,
+        0.4,
+        0.95,
+        0.4
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 15.0,
+      "physical": true
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:pumba"
+  },
+  {
+    "damage": 0.0,
+    "description": "\u001b(T@mobs_animal)Rat\u001bE",
+    "drops": null,
+    "hp_min": 1.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.2,
+        -1.0,
+        -0.2,
+        0.2,
+        -0.8,
+        0.2
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 4.0,
+      "physical": true
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:rat"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_black"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_blue"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_brown"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_cyan"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_dark_green"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_dark_grey"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_green"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_grey"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_magenta"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_orange"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_pink"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_red"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_violet"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_white"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_animal",
+    "name": "mobs_animal:sheep_yellow"
+  },
+  {
+    "damage": 0.0,
+    "description": "mobs_balrog:balrog",
+    "drops": [
+      {
+        "chance": 15.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "mobs_balrog:balrog_whip"
+      },
+      {
+        "chance": 20.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "jc_special:geode_helmet"
+      },
+      {
+        "chance": 20.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "jc_special:geode_chestplate"
+      },
+      {
+        "chance": 20.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "jc_special:geode_leggings"
+      },
+      {
+        "chance": 20.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "jc_special:geode_boots"
+      },
+      {
+        "chance": 20.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "jc_special:geode_shield"
+      }
+    ],
+    "hp_min": 20.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.8,
+        -2.0,
+        -0.8,
+        0.8,
+        2.5,
+        0.8
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 50.0,
+      "physical": true
+    },
+    "mod": "mobs_balrog",
+    "name": "mobs_balrog:balrog"
+  },
+  {
+    "damage": 15.0,
+    "description": "mobs_monster:castle_guard",
+    "drops": [
+      {
+        "chance": 4.0,
+        "max": 5.0,
+        "min": 1.0,
+        "name": "animalia:feather"
+      },
+      {
+        "chance": 4.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "default:sword_steel"
+      },
+      {
+        "chance": 15.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "shields:shield_steel"
+      },
+      {
+        "chance": 8.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "3d_armor:helmet_steel"
+      },
+      {
+        "chance": 8.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "3d_armor:chestplate_steel"
+      },
+      {
+        "chance": 8.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "3d_armor:leggings_steel"
+      },
+      {
+        "chance": 8.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "3d_armor:boots_steel"
+      }
+    ],
+    "hp_min": 20.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -1.0,
+        -0.3,
+        0.3,
+        0.8,
+        0.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 20.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:castle_guard"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.1,
+        -0.1,
+        -0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:cobweb"
+  },
+  {
+    "damage": 2.0,
+    "description": "\u001b(T@mobs_monster)Dirt Monster\u001bE",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:dirt"
+      },
+      {
+        "chance": 2.0,
+        "max": 1.0,
+        "min": 0.0,
+        "name": "default:clay_lump"
+      }
+    ],
+    "hp_min": 3.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -1.0,
+        -0.3,
+        0.3,
+        0.7,
+        0.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 27.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:dirt_monster"
+  },
+  {
+    "damage": 6.0,
+    "description": "\u001b(T@mobs_monster)Dungeon Master\u001bE",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:mese_crystal_fragment"
+      },
+      {
+        "chance": 2.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "mobs:leather"
+      },
+      {
+        "chance": 3.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:mese_crystal"
+      },
+      {
+        "chance": 4.0,
+        "max": 1.0,
+        "min": 0.0,
+        "name": "default:diamond"
+      },
+      {
+        "chance": 30.0,
+        "max": 1.0,
+        "min": 0.0,
+        "name": "default:diamondblock"
+      }
+    ],
+    "hp_min": 42.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.5,
+        -1.0,
+        -0.5,
+        0.5,
+        1.6,
+        0.5
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 75.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:dungeon_master"
+  },
+  {
+    "damage": 10.0,
+    "description": "mobs_monster:elmo",
+    "drops": null,
+    "hp_min": 20.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.15,
+        -0.4,
+        -0.15,
+        0.15,
+        0.32,
+        0.15
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 20.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:elmo"
+  },
+  {
+    "damage": 14.0,
+    "description": "mobs_monster:elmo_large",
+    "drops": [
+      {
+        "chance": 3.0,
+        "max": 15.0,
+        "min": 3.0,
+        "name": "animalia:feather"
+      },
+      {
+        "chance": 6.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "mobs_monster:elmo"
+      },
+      {
+        "chance": 2.0,
+        "max": 15.0,
+        "min": 5.0,
+        "name": "dye:red"
+      },
+      {
+        "chance": 3.0,
+        "max": 99.0,
+        "min": 15.0,
+        "name": "wool:red"
+      }
+    ],
+    "hp_min": 40.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.6,
+        -2.0,
+        -0.6,
+        0.6,
+        1.6,
+        0.6
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 40.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:elmo_large"
+  },
+  {
+    "damage": 4.0,
+    "description": "\u001b(T@mobs_monster)Fire Spirit\u001bE",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "fireflies:firefly"
+      },
+      {
+        "chance": 1.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "ethereal:fire_dust"
+      }
+    ],
+    "hp_min": 25.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.2,
+        -0.2,
+        -0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 45.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:fire_spirit"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -0.3,
+        -0.3,
+        0.3,
+        0.3,
+        0.3
+      ],
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:fireball"
+  },
+  {
+    "damage": 0.0,
+    "description": "mobs_monster:handsome_squidward",
+    "drops": [
+      {
+        "chance": 10.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "ethereal:fish_starfish"
+      },
+      {
+        "chance": 1.0,
+        "max": 15.0,
+        "min": 2.0,
+        "name": "ethereal:fish_squid"
+      },
+      {
+        "chance": 1.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "default:gold_ingot"
+      },
+      {
+        "chance": 5.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "default:mese_crystal"
+      },
+      {
+        "chance": 5.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "jc_party:party_horn"
+      },
+      {
+        "chance": 5.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "jc_party:didgeridoo"
+      }
+    ],
+    "hp_min": 20.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -1.0,
+        -0.3,
+        0.3,
+        0.8,
+        0.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 20.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:handsome_squidward"
+  },
+  {
+    "damage": 12.0,
+    "description": "\u001b(T@mobs_monster)Land Guard\u001bE",
+    "drops": [
+      {
+        "chance": 2.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "mobs:leather"
+      },
+      {
+        "chance": 3.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:mese_crystal"
+      },
+      {
+        "chance": 4.0,
+        "max": 1.0,
+        "min": 0.0,
+        "name": "default:diamond"
+      }
+    ],
+    "hp_min": 30.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.5,
+        -1.01,
+        -0.5,
+        0.5,
+        1.6,
+        0.5
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 65.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:land_guard"
+  },
+  {
+    "damage": 3.0,
+    "description": "\u001b(T@mobs_monster)Lava Flan\u001bE",
+    "drops": [
+      {
+        "chance": 15.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "mobs:lava_orb"
+      }
+    ],
+    "hp_min": 20.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.5,
+        -0.5,
+        -0.5,
+        0.5,
+        1.2,
+        0.5
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 35.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:lava_flan"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.1,
+        -0.1,
+        -0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:mese_arrow"
+  },
+  {
+    "damage": 4.0,
+    "description": "\u001b(T@mobs_monster)Mese Monster\u001bE",
+    "drops": [
+      {
+        "chance": 9.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:mese_crystal"
+      },
+      {
+        "chance": 1.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:mese_crystal_fragment"
+      }
+    ],
+    "hp_min": 10.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.6,
+        -0.5,
+        -0.6,
+        0.6,
+        1.8,
+        0.6
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 25.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:mese_monster"
+  },
+  {
+    "damage": 0.0,
+    "description": "mobs_monster:michael_jackson",
+    "drops": [
+      {
+        "chance": 5.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "mobs_monster:michael_jackson"
+      }
+    ],
+    "hp_min": 20.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -1.0,
+        -0.3,
+        0.3,
+        0.8,
+        0.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 20.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:michael_jackson"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.1,
+        -0.1,
+        -0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:obsidian_arrow"
+  },
+  {
+    "damage": 3.0,
+    "description": "\u001b(T@mobs_monster)Obsidian Flan\u001bE",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 5.0,
+        "min": 1.0,
+        "name": "default:obsidian_shard"
+      },
+      {
+        "chance": 3.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:obsidian"
+      }
+    ],
+    "hp_min": 20.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -0.3,
+        -0.3,
+        0.3,
+        0.8,
+        0.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 35.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:obsidian_flan"
+  },
+  {
+    "damage": 4.0,
+    "description": "\u001b(T@mobs_monster)Oerkki\u001bE",
+    "drops": [
+      {
+        "chance": 3.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:obsidian"
+      },
+      {
+        "chance": 2.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:gold_lump"
+      }
+    ],
+    "hp_min": 8.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.35,
+        -1.0,
+        -0.35,
+        0.35,
+        0.85,
+        0.35
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 34.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:oerkki"
+  },
+  {
+    "damage": 0.0,
+    "description": "mobs_monster:priest",
+    "drops": null,
+    "hp_min": 50.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -1.0,
+        -0.3,
+        0.3,
+        0.8,
+        0.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 50.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:priest"
+  },
+  {
+    "damage": 2.0,
+    "description": "mobs_monster:rhino",
+    "drops": [
+      {
+        "chance": 4.0,
+        "max": 5.0,
+        "min": 1.0,
+        "name": "animalia:feather"
+      },
+      {
+        "chance": 1.0,
+        "max": 10.0,
+        "min": 10.0,
+        "name": "default:steel_ingot"
+      }
+    ],
+    "hp_min": 22.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -1.0,
+        -0.3,
+        0.3,
+        0.8,
+        0.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 22.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:rhino"
+  },
+  {
+    "damage": 1.0,
+    "description": "\u001b(T@mobs_monster)Sand Monster\u001bE",
+    "drops": [
+      {
+        "chance": 2.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "default:silver_sand"
+      },
+      {
+        "chance": 2.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "default:desert_sand"
+      },
+      {
+        "chance": 2.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "default:sand"
+      },
+      {
+        "chance": 2.0,
+        "max": 1.0,
+        "min": 0.0,
+        "name": "default:clay_lump"
+      }
+    ],
+    "hp_min": 4.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -1.0,
+        -0.3,
+        0.3,
+        0.8,
+        0.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 20.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:sand_monster"
+  },
+  {
+    "damage": 3.0,
+    "description": "\u001b(T@mobs_monster)Spider\u001bE",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "farming:string"
+      }
+    ],
+    "hp_min": 10.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.7,
+        -0.5,
+        -0.7,
+        0.7,
+        0.0,
+        0.7
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 30.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:spider"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:spider2"
+  },
+  {
+    "damage": 3.0,
+    "description": "\u001b(T@mobs_monster)Stone Monster\u001bE",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:cobble"
+      },
+      {
+        "chance": 1.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:gravel"
+      },
+      {
+        "chance": 3.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:coal_lump"
+      },
+      {
+        "chance": 5.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:iron_lump"
+      }
+    ],
+    "hp_min": 12.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -1.0,
+        -0.3,
+        0.3,
+        0.7,
+        0.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 35.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:stone_monster"
+  },
+  {
+    "damage": 2.0,
+    "description": "\u001b(T@mobs_monster)Tree Monster\u001bE",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:stick"
+      },
+      {
+        "chance": 2.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:sapling"
+      },
+      {
+        "chance": 3.0,
+        "max": 2.0,
+        "min": 0.0,
+        "name": "default:junglesapling"
+      },
+      {
+        "chance": 4.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "default:apple"
+      }
+    ],
+    "hp_min": 20.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -1.0,
+        -0.3,
+        0.3,
+        0.75,
+        0.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 40.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:tree_monster"
+  },
+  {
+    "damage": 10.0,
+    "description": "mobs_monster:trooper",
+    "drops": [
+      {
+        "chance": 3.0,
+        "max": 5.0,
+        "min": 1.0,
+        "name": "animalia:feather"
+      },
+      {
+        "chance": 5.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "mobs_monster:trooper"
+      },
+      {
+        "chance": 3.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "default:pick_steel"
+      }
+    ],
+    "hp_min": 20.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.3,
+        -1.0,
+        -0.3,
+        0.3,
+        0.8,
+        0.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 20.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:trooper"
+  },
+  {
+    "damage": 10.0,
+    "description": "mobs_monster:unggoy",
+    "drops": [
+      {
+        "chance": 4.0,
+        "max": 7.0,
+        "min": 2.0,
+        "name": "animalia:feather"
+      },
+      {
+        "chance": 2.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "mobs:meat_raw"
+      },
+      {
+        "chance": 4.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "ethereal:banana"
+      },
+      {
+        "chance": 5.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "ethereal:mushroom_pore"
+      },
+      {
+        "chance": 8.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "ethereal:fire_dust"
+      },
+      {
+        "chance": 15.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "mobs:lava_orb"
+      }
+    ],
+    "hp_min": 20.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.4,
+        -0.01,
+        -0.4,
+        0.4,
+        1.5,
+        0.4
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 20.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:unggoy"
+  },
+  {
+    "damage": 12.0,
+    "description": "mobs_monster:unggoy_large",
+    "drops": [
+      {
+        "chance": 3.0,
+        "max": 10.0,
+        "min": 3.0,
+        "name": "animalia:feather"
+      },
+      {
+        "chance": 1.0,
+        "max": 8.0,
+        "min": 2.0,
+        "name": "mobs:meat_raw"
+      },
+      {
+        "chance": 2.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "ethereal:banana"
+      },
+      {
+        "chance": 3.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "ethereal:mushroom_pore"
+      },
+      {
+        "chance": 4.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "ethereal:fire_dust"
+      },
+      {
+        "chance": 15.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "ethereal:crystal_ingot"
+      },
+      {
+        "chance": 5.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "default:steel_ingot"
+      },
+      {
+        "chance": 12.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "default:gold_ingot"
+      },
+      {
+        "chance": 10.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "mobs:lava_orb"
+      }
+    ],
+    "hp_min": 40.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.8,
+        -0.02,
+        -0.8,
+        0.8,
+        3.0,
+        0.8
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 40.0,
+      "physical": true
+    },
+    "mod": "mobs_monster",
+    "name": "mobs_monster:unggoy_large"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:alarm_clock_dummy_wheel"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:bathroom_wall_cabinet_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:bathroom_wall_set_with_mirror_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:bathroom_washbasin_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:ceiling_fan_blades"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:floor_clock_balance_wheel"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:kitchen_cabinet_floor_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:kitchen_cabinet_floor_half_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:kitchen_cabinet_large_drawer"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:kitchen_cabinet_small_drawer"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:kitchen_cabinet_wall_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:kitchen_cabinet_wall_half_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:kitchen_cabinet_wall_half_glass_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:kitchen_cooker_oven_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:kitchen_fridge_lower_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:kitchen_fridge_upper_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:microwave_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:underwear_tank_cover"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:wardrobe_wooden_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:wardrobe_wooden_glass_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:wooden_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:wooden_drawer"
+  },
+  {
+    "initial_properties": null,
+    "mod": "modern",
+    "name": "modern:wooden_drawer_with_round_handle"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:aspen_window_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:aspen_window_door_with_thin_slats"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:bathroom_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:cover"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:dark_rusty_gate"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:high_dark_rusty_gate"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:metallic_locked_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:patterned_aspen_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:patterned_aspen_glass_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:patterned_wooden_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:pine_glass_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:pine_window_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:pine_window_door_with_thin_slats"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:redwood_locked_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:redwood_window_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:redwood_window_door_with_thin_slats"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:simple_aspen_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:simple_pine_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:simple_redwood_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:simple_white_pine_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:simple_wooden_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:sliding_glass_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:sliding_japanese_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:sliding_slotted_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:technical_locked_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:white_pine_glass_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:white_pine_window_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:white_pine_window_door_with_thin_slats"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:wooden_window_door"
+  },
+  {
+    "initial_properties": null,
+    "mod": "multidecor",
+    "name": "multidecor:wooden_window_door_with_thin_slats"
+  },
+  {
+    "damage": 40.0,
+    "description": "nether_mobs:dragon",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 8.0,
+        "min": 5.0,
+        "name": "mobs:meat_raw"
+      },
+      {
+        "chance": 1.0,
+        "max": 3.0,
+        "min": 1.0,
+        "name": "nether_mobs:dragon_scale"
+      },
+      {
+        "chance": 9.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "nether_mobs:dragon_egg"
+      },
+      {
+        "chance": 3.0,
+        "max": 4.0,
+        "min": 2.0,
+        "name": "nether:rack"
+      },
+      {
+        "chance": 3.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "nether:rack_deep"
+      },
+      {
+        "chance": 5.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "nether:brick_compressed"
+      },
+      {
+        "chance": 1.0,
+        "max": 6.0,
+        "min": 2.0,
+        "name": "nether:glowstone"
+      },
+      {
+        "chance": 2.0,
+        "max": 4.0,
+        "min": 1.0,
+        "name": "nether:glowstone_deep"
+      },
+      {
+        "chance": 2.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "nether:basalt"
+      }
+    ],
+    "hp_min": 200.0,
+    "initial_properties": {
+      "collisionbox": [
+        -1.3,
+        -1.0,
+        -1.3,
+        1.3,
+        1.8,
+        1.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 300.0,
+      "physical": true
+    },
+    "mod": "nether_mobs",
+    "name": "nether_mobs:dragon"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.1,
+        -0.1,
+        -0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "physical": true
+    },
+    "mod": "nether_mobs",
+    "name": "nether_mobs:dragon_breath"
+  },
+  {
+    "damage": 8.0,
+    "description": "nether_mobs:netherman",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 5.0,
+        "min": 1.0,
+        "name": "nether:sand"
+      },
+      {
+        "chance": 3.0,
+        "max": 4.0,
+        "min": 1.0,
+        "name": "nether:rack"
+      },
+      {
+        "chance": 10.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "nether:brick"
+      },
+      {
+        "chance": 80.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "nether:brick_compressed"
+      },
+      {
+        "chance": 5.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "nether:glowstone"
+      },
+      {
+        "chance": 10.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "nether:glowstone_deep"
+      }
+    ],
+    "hp_min": 15.0,
+    "initial_properties": {
+      "collisionbox": [
+        -0.4,
+        -1.0,
+        -0.4,
+        0.4,
+        0.8,
+        0.4
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 25.0,
+      "physical": true
+    },
+    "mod": "nether_mobs",
+    "name": "nether_mobs:netherman"
+  },
+  {
+    "damage": 34.0,
+    "description": "nether_mobs:tamed_dragon",
+    "drops": [
+      {
+        "chance": 1.0,
+        "max": 8.0,
+        "min": 5.0,
+        "name": "mobs:meat_raw"
+      },
+      {
+        "chance": 1.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "nether_mobs:dragon_scale"
+      },
+      {
+        "chance": 12.0,
+        "max": 1.0,
+        "min": 1.0,
+        "name": "nether_mobs:dragon_egg"
+      },
+      {
+        "chance": 3.0,
+        "max": 4.0,
+        "min": 2.0,
+        "name": "nether:rack"
+      },
+      {
+        "chance": 3.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "nether:rack_deep"
+      },
+      {
+        "chance": 5.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "nether:brick_compressed"
+      },
+      {
+        "chance": 1.0,
+        "max": 6.0,
+        "min": 2.0,
+        "name": "nether:glowstone"
+      },
+      {
+        "chance": 2.0,
+        "max": 4.0,
+        "min": 1.0,
+        "name": "nether:glowstone_deep"
+      },
+      {
+        "chance": 2.0,
+        "max": 2.0,
+        "min": 1.0,
+        "name": "nether:basalt"
+      }
+    ],
+    "hp_min": 100.0,
+    "initial_properties": {
+      "collisionbox": [
+        -1.3,
+        -1.0,
+        -1.3,
+        1.3,
+        1.8,
+        1.3
+      ],
+      "damage_texture_modifier": "^[colorize:#c9900070",
+      "hp_max": 200.0,
+      "physical": true
+    },
+    "mod": "nether_mobs",
+    "name": "nether_mobs:tamed_dragon"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.25,
+        -0.25,
+        -0.25,
+        0.25,
+        0.25,
+        0.25
+      ],
+      "hp_max": 1000.0,
+      "physical": true
+    },
+    "mod": "newsoccer",
+    "name": "newsoccer:ball"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.25,
+        -0.25,
+        -0.25,
+        0.25,
+        0.25,
+        0.25
+      ],
+      "hp_max": 1000.0,
+      "physical": true
+    },
+    "mod": "newsoccer",
+    "name": "newsoccer:purple_ball"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "mod": "ontime_clocks",
+    "name": "ontime_clocks:display"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "physical": false
+    },
+    "mod": "protector",
+    "name": "protector:display"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "mod": "signs",
+    "name": "signs:display_text"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "mod": "signs",
+    "name": "signs:text"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "mod": "signs_lib",
+    "name": "signs_lib:text"
+  },
+  {
+    "initial_properties": null,
+    "mod": "smartshop",
+    "name": "smartshop:item"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "smartshop",
+    "name": "smartshop:quad_upright_sprite"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "smartshop",
+    "name": "smartshop:single_sprite"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "hp_max": 1.0,
+      "physical": false
+    },
+    "mod": "smartshop",
+    "name": "smartshop:single_upright_sprite"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "physical": false
+    },
+    "mod": "smartshop",
+    "name": "smartshop:single_wielditem"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "mod": "steles",
+    "name": "steles:text"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.55,
+        -0.55,
+        -0.55,
+        0.55,
+        0.55,
+        0.55
+      ],
+      "physical": false
+    },
+    "mod": "worldedit",
+    "name": "worldedit:pos1"
+  },
+  {
+    "initial_properties": {
+      "collisionbox": [
+        -0.55,
+        -0.55,
+        -0.55,
+        0.55,
+        0.55,
+        0.55
+      ],
+      "physical": false
+    },
+    "mod": "worldedit",
+    "name": "worldedit:pos2"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "worldedit",
+    "name": "worldedit:region_cube"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "zombies",
+    "name": "zombies:1arm"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "zombies",
+    "name": "zombies:crawler"
+  },
+  {
+    "initial_properties": {
+      "physical": false
+    },
+    "mod": "zombies",
+    "name": "zombies:normal"
+  }
+]
