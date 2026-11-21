@@ -557,7 +557,10 @@ def main():
       const s = state.recipes;
       while (s && s.position <= targetIndex && s.position < s.rows.length) appendBatch('recipes');
       const target = document.getElementById(hash);
-      if (target) requestAnimationFrame(() => target.scrollIntoView({{behavior:'smooth',block:'start'}}));
+      if (target) requestAnimationFrame(() => {{
+        const top = target.getBoundingClientRect().top + window.scrollY - 20;
+        window.scrollTo({{top: top, behavior: 'smooth'}});
+      }});
       return;
     }}
     const id=activeSection(); if (id) await loadSection(id);
@@ -668,7 +671,7 @@ Open `index.html` for the guide. The page shell is small; each section's JSON is
 
 - Weapon comparisons use exported damage groups. Where `full_punch_interval` exists, damage divided by that interval is a theoretical comparison only, not measured in-game DPS.
 - Tool comparisons are separated by digging group and level. Lower exported dig time is faster; durability uses are shown separately.
-- Armor comparisons remain separated by armor slot, damage group and source field. Values are not combined into a universal score or converted to damage-reduction percentages.
+- Armor comparisons remain separated by armor slot, damage group and source field. Values are not combined into a universal score or converted into damage-reduction percentages.
 - Missing values are displayed as unavailable rather than guessed.
 
 ## Recipes
@@ -689,7 +692,7 @@ The item catalogue uses each item's `inventory_image` under `images/<mod>/<filen
 python3 generate_jc_information.py
 ```
 
-No third-party Python packages are required.
+No third-party packages are required.
 '''
     (outdir / "README.md").write_text(readme, encoding="utf-8")
     print(f"Generated documentation in: {outdir.resolve()}")
