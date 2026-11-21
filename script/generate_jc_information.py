@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """Generate a player-friendly JustCraft reference from jc_information.json[.gz].
 
@@ -10,6 +11,7 @@ import html
 import json
 import math
 import re
+import shutil
 from collections import defaultdict, Counter
 from pathlib import Path
 
@@ -303,6 +305,74 @@ def dependency_tree(item_name, by_output, item_map, by_group, seen=None, depth=0
     return ''.join(children)
 
 
+def copy_inventory_images(items, outdir, image_base, texture_dirs):
+    """Copy ordinary inventory image files into the generated handbook."""
+    if not image_base:
+        print("Inventory image copying disabled.")
+        return
+
+    image_base_path = Path(image_base)
+
+    if image_base_path.is_absolute() or ".." in image_base_path.parts:
+        print("Inventory image copying skipped: --image-base must be a relative directory inside the output directory.")
+        return
+
+    image_root = outdir / image_base_path
+    image_index = defaultdict(list)
+
+    for root in texture_dirs:
+        if not root.is_dir():
+            print(f"Texture directory not found: {root}")
+            continue
+
+        for path in root.rglob("*"):
+            if path.is_file() and path.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp"):
+                image_index[path.name].append(path)
+
+    copied = set()
+    missing = set()
+    skipped = set()
+
+    for item in items:
+        image = item.get("inventory_image") or ""
+        mod = item.get("mod") or "unknown"
+
+        # Only copy ordinary image filenames, not composed texture strings.
+        if not isinstance(image, str) or not re.fullmatch(r"[\w./-]+\.(png|jpe?g|webp)", image, re.IGNORECASE):
+            if image:
+                skipped.add(str(image))
+            continue
+
+        filename = Path(image).name
+        candidates = image_index.get(filename, [])
+
+        if not candidates:
+            missing.add(filename)
+            continue
+
+        # Prefer a texture found inside the item's own mod directory.
+        candidates.sort(
+            key=lambda path: (
+                0 if mod in path.parts else 1,
+                str(path)
+            )
+        )
+
+        destination = image_root / mod / filename
+        key = (mod, filename)
+
+        if key in copied:
+            continue
+
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(candidates[0], destination)
+        copied.add(key)
+
+    print(f"Inventory images copied: {len(copied):,}")
+    print(f"Inventory images missing: {len(missing):,}")
+    print(f"Composed/unsupported image definitions skipped: {len(skipped):,}")
+
+
 def item_details(item, item_map, by_output, by_group, image_base):
     name = item.get("name") or ""
     desc = clean_text(item.get("short_description") or item.get("description"))
@@ -336,7 +406,11 @@ def item_details(item, item_map, by_output, by_group, image_base):
     relevant_groups = [(k, v) for k, v in groups.items() if not k.startswith("not_in_creative_inventory")]
     group_text = ", ".join(f"{k}={number(v)}" for k, v in sorted(relevant_groups)[:18])
     image = item.get("inventory_image") or ""
-    image_url = (image_base.rstrip("/") + "/" + image.lstrip("/")) if image and image_base else ""
+    mod = item.get("mod") or "unknown"
+    image_filename = Path(image).name if image else ""
+    image_url = (
+        image_base.rstrip("/") + "/" + mod + "/" + image_filename
+    ) if image_filename and image_base else ""
     recipes = by_output.get(name, [])
     recipe_link = f'<a href="#recipes" class="recipe-count">{len(recipes)} known crafting/cooking recipe(s)</a>' if recipes else '<span class="muted">No crafting or cooking recipe found in this export.</span>'
     dependency = dependency_tree(name, by_output, item_map, by_group, budget=[12]) if recipes else ""
@@ -400,7 +474,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate the JustCraft player reference website.")
     parser.add_argument("input", nargs="?", default="jc_information.json", help="Input JSON or .json.gz export")
     parser.add_argument("-o", "--output", default="jc_information_docs", help="Output directory")
-    parser.add_argument("--image-base", default="images", help="Relative URL/path prefix for inventory images; use empty string to disable")
+    parser.add_argument("--image-base", default="images", help="Relative image directory/URL prefix; use empty string to disable")
     args = parser.parse_args()
     source = Path(args.input)
     outdir = Path(args.output)
@@ -421,6 +495,14 @@ def main():
 
     outdir.mkdir(parents=True, exist_ok=True)
     image_base = args.image_base
+
+    texture_dirs = [
+        Path("/home/main/luanti/worlds/justcraft/worldmods"),
+        Path("/home/main/luanti/games/minetest_game"),
+    ]
+
+    copy_inventory_images(items, outdir, image_base, texture_dirs)
+
     item_rows = []
     for cat in sorted(categories):
         item_rows.append(f'<h3>{esc(cat.replace("_", " ").title())} ({len(categories[cat])})</h3><table><thead><tr><th>Item</th><th>Mod</th><th>Type</th><th>Capabilities and information</th></tr></thead><tbody>')
@@ -496,7 +578,7 @@ def main():
     (outdir / "entities.json").write_text(json.dumps(entities, indent=2, ensure_ascii=False), encoding="utf-8")
 
     # Human-readable README: concise overview and data limitations.
-    readme = f'''# JustCraft Player Handbook\n\nGenerated from `{source.name}`.\n\n- Game: {title}\n- Export timestamp: {generated}\n- Items: {len(items):,}\n- Entities: {len(entities):,}\n- Crafting recipes: {len(valid_normal):,}\n- Cooking recipes with known outputs: {len(valid_cooking):,}\n- Fuel records: {len(fuels):,}\n\nOpen `index.html` for the searchable guide.\n\n## Rankings and interpretation\n\n- Weapon comparisons use exported damage groups. Where `full_punch_interval` exists, the guide calculates damage divided by that interval as a theoretical comparison only. It is not a measured in-game DPS value.\n- Tool comparisons are separated by digging group and level. Lower exported dig time is faster. Durability uses are shown separately.\n- Armor comparisons are separated by armor slot, damage group and source field. Values from different fields/systems are not combined into a universal armor score or converted to damage-reduction percentages.\n- Missing values are displayed as unavailable rather than guessed.\n\n## Recipes\n\n- All exported recipe records are preserved in `recipes.json`.\n- Shaped recipes use `recipe_width` and retain empty grid positions.\n- Recipes with width zero are treated as shapeless.\n- Group ingredients such as `group:wood` are described as any registered item belonging to that group.\n- Alternate recipes remain separate records.\n- Fuel records identify the fuel item in `items[0]`; their empty `output_item` is expected for this export format.\n- {len(invalid_cooking)} cooking records have no output identifier and cannot be presented as usable instructions.\n- {missing_cook} cooking recipes with known outputs have no exported cooking time.\n\n## Images\n\nThe HTML uses each item's `inventory_image` filename under the configured `--image-base` directory (default `images/`). The JSON export contains image names, not the image files themselves. Copy the corresponding Luanti textures to that directory or change the image base when generating. Missing images are hidden automatically.\n\n## Regenerate\n\n```bash\npython3 generate_jc_information.py jc_information.json.gz\n```\n\nOptional arguments:\n\n```bash\npython3 generate_jc_information.py jc_information.json.gz --output public/justcraft --image-base ../textures\n```\n\nNo third-party Python packages are required.\n'''
+    readme = f'''# JustCraft Player Handbook\n\nGenerated from `{source.name}`.\n\n- Game: {title}\n- Export timestamp: {generated}\n- Items: {len(items):,}\n- Entities: {len(entities):,}\n- Crafting recipes: {len(valid_normal):,}\n- Cooking recipes with known outputs: {len(valid_cooking):,}\n- Fuel records: {len(fuels):,}\n\nOpen `index.html` for the searchable guide.\n\n## Rankings and interpretation\n\n- Weapon comparisons use exported damage groups. Where `full_punch_interval` exists, the guide calculates damage divided by that interval as a theoretical comparison only. It is not a measured in-game DPS value.\n- Tool comparisons are separated by digging group and level. Lower exported dig time is faster. Durability uses are shown separately.\n- Armor comparisons are separated by armor slot, damage group and source field. Values from different fields/systems are not combined into a universal armor score or converted to damage-reduction percentages.\n- Missing values are displayed as unavailable rather than guessed.\n\n## Recipes\n\n- All exported recipe records are preserved in `recipes.json`.\n- Shaped recipes use `recipe_width` and retain empty grid positions.\n- Recipes with width zero are treated as shapeless.\n- Group ingredients such as `group:wood` are described as any registered item belonging to that group.\n- Alternate recipes remain separate records.\n- Fuel records identify the fuel item in `items[0]`; their empty `output_item` is expected for this export format.\n- {len(invalid_cooking)} cooking records have no output identifier and cannot be presented as usable instructions.\n- {missing_cook} cooking recipes with known outputs have no exported cooking time.\n\n## Images\n\nThe HTML uses each item's `inventory_image` filename under the configured `--image-base` directory, grouped by mod. The generator copies ordinary image files from the configured worldmods and minetest_game texture directories. Composed texture definitions are skipped because they are not standalone image files. Missing images are hidden automatically.\n\n## Regenerate\n\n```bash\npython3 generate_jc_information.py jc_information.json.gz\n```\n\nOptional arguments:\n\n```bash\npython3 generate_jc_information.py jc_information.json.gz --output public/justcraft --image-base images\n```\n\nNo third-party Python packages are required.\n'''
     (outdir / "README.md").write_text(readme, encoding="utf-8")
 
     print(f"Generated documentation in: {outdir.resolve()}")
