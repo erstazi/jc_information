@@ -837,6 +837,13 @@ def main():
   const status = id => section(id).querySelector('.section-status');
   const content = id => section(id).querySelector('.section-content');
   function setStatus(id, message) {{ status(id).textContent = message; }}
+  function textMatches(hay, q) {{
+    if (!q) return true;
+    // Match q as a whole token, not inside longer words like "soil".
+    const escaped = q.replace(/[.*+?^${{}}()|[\]\\]/g, '\\$&');
+    const re = new RegExp('(?:^|[^a-z0-9_])' + escaped + '(?:[^a-z0-9_]|$)', 'i');
+    return re.test(String(hay || ''));
+  }}
   async function getData(file) {{
     if (!cache[file]) {{
       cache[file] = fetch(file).then(r => {{
@@ -1006,7 +1013,7 @@ def main():
       const rows = data.rows || [];
       const matches = [];
       for (const entry of (index.items || [])) {{
-        if (entry.t.includes(q)) matches.push(rows[entry.i]);
+        if (textMatches(entry.t, q)) matches.push(rows[entry.i]);
       }}
       const groups = {{}};
       for (const entry of matches) {{
@@ -1028,7 +1035,7 @@ def main():
       const rows = data[key] || [];
       const hits = [];
       for (const entry of (index[indexKey] || [])) {{
-        if (entry.t.includes(q)) {{
+        if (textMatches(entry.t, q)) {{
           const row = rows[entry.i];
           if (row != null) hits.push(row);
         }}
@@ -1057,7 +1064,7 @@ def main():
       let visible = 0;
       nodes.forEach(el => {{
         const hay = (el.getAttribute('data-search') || el.textContent || '').toLowerCase();
-        const show = hay.includes(q);
+        const show = textMatches(hay, q);
         el.hidden = !show;
         if (show) visible += 1;
       }});
