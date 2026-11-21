@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a player-friendly JustCraft reference from jc_information.json[.gz].
+"""Generate a player-friendly JustCraft reference from jc_information.json.
 
 No third-party Python packages are required.
 
@@ -243,7 +243,7 @@ def render_recipe(recipe, item_map, by_group, index, dependency_html=""):
 
     description = recipe_description(recipe, item_map, by_group)
     method_label = "Crafting" if method == "normal" else "Cooking"
-    html_parts = [f'<article class="recipe-card searchable" data-search="{esc(output + " " + title + " " + " ".join(str(x) for x in valid_ingredients))}">']
+    html_parts = [f'<article id="recipe-{index}" class="recipe-card searchable" data-search="{esc(output + " " + title + " " + " ".join(str(x) for x in valid_ingredients))}">']
     html_parts.append(f'<div class="recipe-head"><strong>{esc(title)}</strong><span class="tag">{esc(method_label)}</span></div>')
     if output_count and output_count > 1:
         html_parts.append(f'<p class="muted">Produces {output_count} items.</p>')
@@ -308,7 +308,7 @@ def dependency_tree(item_name, by_output, item_map, by_group, seen=None, depth=0
     return ''.join(children)
 
 
-def item_details(item, item_map, by_output, by_group, image_base):
+def item_details(item, item_map, by_output, by_group, image_base, recipe_anchor_map):
     name = item.get("name") or ""
     desc = clean_text(item.get("short_description") or item.get("description"))
     display_name = desc or item_label(name, item_map)
@@ -344,7 +344,7 @@ def item_details(item, item_map, by_output, by_group, image_base):
     image_mod = item.get("mod") or "unknown"
     image_url = (image_base.rstrip("/") + "/" + str(image_mod).strip("/") + "/" + image.lstrip("/")) if image and image_base else ""
     recipes = by_output.get(name, [])
-    recipe_link = f'<a href="#recipes" class="recipe-count">{len(recipes)} known crafting/cooking recipe(s)</a>' if recipes else '<span class="muted">No crafting or cooking recipe found in this export.</span>'
+    recipe_link = f'<a href="#recipe-{recipe_anchor_map[name]}" class="recipe-count">{len(recipes)} known crafting/cooking recipe(s)</a>' if recipes and name in recipe_anchor_map else '<span class="muted">No crafting or cooking recipe found in this export.</span>'
     dependency = dependency_tree(name, by_output, item_map, by_group, budget=[12]) if recipes else ""
     dependency_html = (
         '<details><summary>One possible ingredient chain</summary><ul>' + dependency +
@@ -427,18 +427,22 @@ def main():
     outdir.mkdir(parents=True, exist_ok=True)
     image_base = args.image_base
 
-    # Pre-render the existing detailed markup into small, separately fetched datasets.
-    item_rows = []
-    for cat in sorted(categories):
-        for item in sorted(categories[cat], key=lambda x: x.get("name", "")):
-            item_rows.append({"category": cat.replace("_", " ").title(),
-                              "html": item_details(item, item_map, by_output, by_group, image_base)})
-
     valid_normal = [r for r in crafts if r.get("method") == "normal" and r.get("output_item")]
     valid_cooking = [r for r in crafts if r.get("method") == "cooking" and r.get("output_item")]
     fuels = [r for r in crafts if r.get("method") == "fuel" and safe_list(r.get("items"))]
     invalid_cooking = [r for r in crafts if r.get("method") == "cooking" and not r.get("output_item")]
     all_valid = sorted(valid_normal + valid_cooking, key=recipe_sort_key)
+    recipe_anchor_map = {}
+    for i, recipe in enumerate(all_valid):
+        recipe_anchor_map.setdefault(recipe.get("output_item") or "", i)
+
+    # Pre-render the existing detailed markup into small, separately fetched datasets.
+    item_rows = []
+    for cat in sorted(categories):
+        for item in sorted(categories[cat], key=lambda x: x.get("name", "")):
+            item_rows.append({"category": cat.replace("_", " ").title(),
+                              "html": item_details(item, item_map, by_output, by_group, image_base, recipe_anchor_map)})
+
     recipe_html = [render_recipe(r, item_map, by_group, i) for i, r in enumerate(all_valid)]
     fuel_html = [render_recipe(r, item_map, by_group, i) for i, r in enumerate(fuels)]
 
@@ -544,7 +548,20 @@ def main():
   }}
   const navIds = ['items','weapons','tools','armor','recipes','fuel','entities'];
   function activeSection() {{ const id=location.hash.slice(1); return navIds.includes(id) ? id : ''; }}
-  async function onHash() {{ const id=activeSection(); if (id) await loadSection(id); }}
+  async function onHash() {{
+    const hash = decodeURIComponent(location.hash.slice(1));
+    const recipeMatch = hash.match(/^recipe-(\\d+)$/);
+    if (recipeMatch) {{
+      await loadSection('recipes');
+      const targetIndex = Number(recipeMatch[1]);
+      const s = state.recipes;
+      while (s && s.position <= targetIndex && s.position < s.rows.length) appendBatch('recipes');
+      const target = document.getElementById(hash);
+      if (target) requestAnimationFrame(() => target.scrollIntoView({{behavior:'smooth',block:'start'}}));
+      return;
+    }}
+    const id=activeSection(); if (id) await loadSection(id);
+  }}
   async function loadAllSections() {{
     const indicator = document.getElementById('data-status');
     try {{
@@ -669,7 +686,7 @@ The item catalogue uses each item's `inventory_image` under `images/<mod>/<filen
 ## Regenerate
 
 ```bash
-python3 generate_jc_information.py jc_information.json.gz
+python3 generate_jc_information.py
 ```
 
 No third-party Python packages are required.
