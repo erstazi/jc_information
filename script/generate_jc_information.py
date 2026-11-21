@@ -473,7 +473,20 @@ def main():
     source = Path(args.input)
     outdir = Path(args.output)
     data = load_json(source)
+    data["items"] = [
+        item for item in safe_list(data.get("items"))
+        if item.get("mod") != "animalworld"
+    ]
+
+    data["entities"] = [
+        entity for entity in safe_list(data.get("entities"))
+        if entity.get("mod") != "animalworld"
+    ]
+
     items, item_map, crafts, by_output, by_group = build_indexes(data)
+    items = [item for item in items if item.get("mod") != "animalworld"]
+    item_map = {item["name"]: item for item in items if item.get("name")}
+
     entities = [x for x in safe_list(data.get("entities")) if isinstance(x, dict) and x.get("name")]
     weapons, tools, armor = ranking_rows(items)
 
