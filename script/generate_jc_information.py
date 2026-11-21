@@ -15,7 +15,7 @@ import html
 import json
 import math
 import re
-from collections import defaultdict, Counter
+from collections import defaultdict
 from pathlib import Path
 
 
@@ -95,31 +95,17 @@ def armor_slot(item):
     return "other"
 
 
-def tool_families(item):
-    caps = safe_dict(item.get("tool_capabilities"))
-    groupcaps = safe_dict(caps.get("groupcaps"))
-    families = []
-    for group, label in (("cracky", "Pickaxe"), ("choppy", "Axe"), ("crumbly", "Shovel"), ("snappy", "Sword")):
-        if group in groupcaps:
-            families.append(label)
-    if not families and groupcaps:
-        families = ["Special tool"]
-    return families
-
-
 def is_weapon(item):
     caps = safe_dict(item.get("tool_capabilities"))
     damage = safe_dict(caps.get("damage_groups")) or safe_dict(item.get("damage_groups"))
     groups = safe_dict(item.get("groups"))
     name = (item.get("name") or "").lower()
-    # A registered weapon group or explicit weapon-like name is sufficient.
     if groups.get("weapon"):
         return True
     if not damage:
         return False
     if any(word in name for word in ("sword", "whip", "spear", "dagger", "knife", "club", "bow", "crossbow")):
         return True
-    # Snappy-only damage tools (e.g. swords) are weapons; digging tools remain tools.
     gc = safe_dict(caps.get("groupcaps"))
     return "snappy" in gc and not any(k in gc for k in ("cracky", "choppy", "crumbly"))
 
@@ -130,11 +116,14 @@ def is_tool(item):
 
 
 def recipe_sort_key(recipe):
-    return (recipe.get("output_item") or "", recipe.get("method") or "", json.dumps(recipe, sort_keys=True, ensure_ascii=False))
+    return (
+        recipe.get("output_item") or "",
+        recipe.get("method") or "",
+        json.dumps(recipe, sort_keys=True, ensure_ascii=False),
+    )
 
 
 def build_indexes(data):
-    # The empty item name is Luanti's built-in hand definition; keep it as a useful baseline.
     items = [x for x in safe_list(data.get("items")) if isinstance(x, dict)]
     item_map = {x["name"]: x for x in items if x.get("name")}
     recipes = [x for x in safe_list(data.get("crafts")) if isinstance(x, dict)]
@@ -166,26 +155,59 @@ def ranking_rows(items):
             for dtype, value in damage.items():
                 if isinstance(value, (int, float)):
                     dps = value / interval if isinstance(interval, (int, float)) and interval > 0 else None
-                    weapons.append({"item": item, "damage_type": dtype, "damage": value, "interval": interval, "estimate": dps})
+                    weapons.append(
+                        {
+                            "item": item,
+                            "damage_type": dtype,
+                            "damage": value,
+                            "interval": interval,
+                            "estimate": dps,
+                        }
+                    )
         if is_tool(item):
             for group, info in gc.items():
                 info = safe_dict(info)
                 times = safe_list(info.get("times"))
                 for level, seconds in enumerate(times, 1):
                     if isinstance(seconds, (int, float)) and seconds > 0:
-                        tools.append({"item": item, "group": group, "level": level, "seconds": seconds,
-                                      "uses": info.get("uses"), "maxlevel": info.get("maxlevel")})
-        if item.get("category") == "armor" or any(k.startswith("armor_") and isinstance(v, (int, float)) and v > 0 for k, v in groups.items()):
+                        tools.append(
+                            {
+                                "item": item,
+                                "group": group,
+                                "level": level,
+                                "seconds": seconds,
+                                "uses": info.get("uses"),
+                                "maxlevel": info.get("maxlevel"),
+                            }
+                        )
+        if item.get("category") == "armor" or any(
+            k.startswith("armor_") and isinstance(v, (int, float)) and v > 0 for k, v in groups.items()
+        ):
             slot = armor_slot(item)
             ag = safe_dict(item.get("armor_groups"))
             if ag:
                 for dtype, value in ag.items():
                     if isinstance(value, (int, float)):
-                        armor.append({"item": item, "slot": slot, "type": dtype, "value": value, "source": "armor_groups"})
-            # Preserve alternate systems' exported slot values as a separate comparison.
+                        armor.append(
+                            {
+                                "item": item,
+                                "slot": slot,
+                                "type": dtype,
+                                "value": value,
+                                "source": "armor_groups",
+                            }
+                        )
             slot_key = "armor_" + slot
             if slot != "other" and isinstance(groups.get(slot_key), (int, float)) and groups[slot_key] > 1:
-                armor.append({"item": item, "slot": slot, "type": "slot value", "value": groups[slot_key], "source": "groups." + slot_key})
+                armor.append(
+                    {
+                        "item": item,
+                        "slot": slot,
+                        "type": "slot value",
+                        "value": groups[slot_key],
+                        "source": "groups." + slot_key,
+                    }
+                )
     return weapons, tools, armor
 
 
@@ -210,16 +232,9 @@ def item_image(name, item_map, image_base):
     item = item_map.get(name) or {}
     image = item.get("inventory_image") or ""
     mod = item.get("mod") or "unknown"
-
     if not image or not image_base:
         return ""
-
-    image_url = (
-        image_base.rstrip("/") + "/" +
-        str(mod).strip("/") + "/" +
-        image.lstrip("/")
-    )
-
+    image_url = image_base.rstrip("/") + "/" + str(mod).strip("/") + "/" + image.lstrip("/")
     return (
         f'<img src="{esc(image_url)}" alt="" loading="lazy" '
         f'style="width:36px;height:36px;object-fit:contain;vertical-align:middle" '
@@ -230,20 +245,13 @@ def item_image(name, item_map, image_base):
 def render_ingredient(value, item_map, by_group, image_base):
     if not value:
         return ""
-
     if isinstance(value, str) and value.startswith("group:"):
         return esc(format_ingredient(value, item_map, by_group))
-
     name, count = parse_stack(value)
     label = item_label(name, item_map)
     image = item_image(name, item_map, image_base)
-    quantity = f'<small>{count} × </small>' if count and count > 1 else ""
-
-    return (
-        f'<span class="recipe-ingredient">'
-        f'{image}{quantity}{esc(label)}'
-        f'</span>'
-    )
+    quantity = f"<small>{count} × </small>" if count and count > 1 else ""
+    return f'<span class="recipe-ingredient">{image}{quantity}{esc(label)}</span>'
 
 
 def recipe_description(recipe, item_map, by_group):
@@ -260,7 +268,10 @@ def recipe_description(recipe, item_map, by_group):
         if source and isinstance(duration, (int, float)):
             return f"Cook {item_label(source, item_map)} in a furnace for {number(duration)} seconds."
         if source:
-            return f"A cooking recipe is registered for {item_label(source, item_map)}, but the export has no verified cooking time."
+            return (
+                f"A cooking recipe is registered for {item_label(source, item_map)}, "
+                "but the export has no verified cooking time."
+            )
         return "Cooking recipe details are incomplete in the export."
     return ""
 
@@ -273,27 +284,42 @@ def render_recipe(recipe, item_map, by_group, index, image_base, dependency_html
     ingredients = safe_list(recipe.get("items"))
     valid_ingredients = [x for x in ingredients if x]
     title = item_label(output, item_map) if output else "Fuel source"
+
     if method == "fuel":
         source = valid_ingredients[0] if valid_ingredients else ""
         burn = recipe.get("burn_time_seconds")
-        return (f'<article class="recipe-card searchable" data-search="{esc((source or "") + " " + item_label(source, item_map))}">'
-                f'<div class="recipe-head"><strong>Fuel: {esc(item_label(source, item_map))}</strong>'
-                f'<span class="tag">Fuel</span></div><p>Burns for <b>{esc(number(burn) or "Not available")}</b> seconds per item.</p>'
-                f'<small class="muted">{esc(source)}</small></article>')
+        return (
+            f'<article class="recipe-card searchable" data-search="'
+            f'{esc((source or "") + " " + item_label(source, item_map))}">'
+            f'<div class="recipe-head"><strong>Fuel: {esc(item_label(source, item_map))}</strong>'
+            f'<span class="tag">Fuel</span></div>'
+            f'<p>Burns for <b>{esc(number(burn) or "Not available")}</b> seconds per item.</p>'
+            f'<small class="muted">{esc(source)}</small></article>'
+        )
 
     description = recipe_description(recipe, item_map, by_group)
     method_label = "Crafting" if method == "normal" else "Cooking"
-    html_parts = [f'<article id="recipe-{index}" class="recipe-card searchable" data-search="{esc(output + " " + title + " " + " ".join(str(x) for x in valid_ingredients))}">']
+    search_blob = " ".join(
+        [
+            output,
+            title,
+            method_label,
+            " ".join(str(x) for x in valid_ingredients),
+            " ".join(format_ingredient(x, item_map, by_group) for x in valid_ingredients),
+        ]
+    )
+    html_parts = [
+        f'<article id="recipe-{index}" class="recipe-card searchable" data-search="{esc(search_blob)}">'
+    ]
     output_image = item_image(output, item_map, image_base)
     html_parts.append(
-        f'<div class="recipe-head">'
-        f'<strong>{output_image}{esc(title)}</strong>'
+        f'<div class="recipe-head"><strong>{output_image}{esc(title)}</strong>'
         f'<span class="tag">{esc(method_label)}</span></div>'
     )
-
     if output_count and output_count > 1:
         html_parts.append(f'<p class="muted">Produces {output_count} items.</p>')
-    html_parts.append(f'<p>{esc(description)}</p>')
+    html_parts.append(f"<p>{esc(description)}</p>")
+
     if method == "normal":
         width = recipe.get("recipe_width")
         if isinstance(width, (int, float)) and width > 0:
@@ -301,11 +327,10 @@ def render_recipe(recipe, item_map, by_group, index, image_base, dependency_html
             cells = []
             for value in ingredients:
                 if value:
-                    #  cells.append(f'<div class="craft-cell" title="{esc(value)}">{esc(format_ingredient(value, item_map, by_group))}</div>')
                     cells.append(
                         f'<div class="craft-cell" title="{esc(value)}">'
-                        f'{render_ingredient(value, item_map, by_group, image_base)}'
-                        f'</div>'
+                        f"{render_ingredient(value, item_map, by_group, image_base)}"
+                        f"</div>"
                     )
                 else:
                     cells.append('<div class="craft-cell empty">&nbsp;</div>')
@@ -313,27 +338,27 @@ def render_recipe(recipe, item_map, by_group, index, image_base, dependency_html
                 cells.append('<div class="craft-cell empty">&nbsp;</div>')
             html_parts.append(f'<div class="craft-grid" style="--grid-width:{width}">{"".join(cells)}</div>')
         else:
-            #  html_parts.append('<div class="ingredient-list">' + ''.join(f'<span class="ingredient">{esc(format_ingredient(x, item_map, by_group))}</span>' for x in valid_ingredients) + '</div>')
             html_parts.append(
-                '<div class="ingredient-list">' +
-                ''.join(
+                '<div class="ingredient-list">'
+                + "".join(
                     f'<span class="ingredient">{render_ingredient(x, item_map, by_group, image_base)}</span>'
                     for x in valid_ingredients
-                ) +
-                '</div>'
+                )
+                + "</div>"
             )
     elif method == "cooking":
         source = recipe.get("cook_input") or (valid_ingredients[0] if valid_ingredients else "")
-        #  html_parts.append(f'<p><b>Input:</b> {esc(format_ingredient(source, item_map, by_group))}</p>')
-        html_parts.append(
-            f'<p><b>Input:</b> {render_ingredient(source, item_map, by_group, image_base)}</p>'
-        )
+        html_parts.append(f"<p><b>Input:</b> {render_ingredient(source, item_map, by_group, image_base)}</p>")
         t = recipe.get("cook_time_seconds")
-        html_parts.append(f'<p><b>Cooking time:</b> {esc(number(t) + " seconds" if isinstance(t, (int, float)) else "Not available in export")}</p>')
+        html_parts.append(
+            f"<p><b>Cooking time:</b> "
+            f'{esc(number(t) + " seconds" if isinstance(t, (int, float)) else "Not available in export")}</p>'
+        )
+
     if dependency_html:
         html_parts.append(dependency_html)
     html_parts.append(f'<small class="muted">Recipe record #{index + 1} · {esc(output)}</small></article>')
-    return ''.join(html_parts)
+    return "".join(html_parts)
 
 
 def dependency_tree(item_name, by_output, item_map, by_group, seen=None, depth=0, budget=None):
@@ -345,7 +370,7 @@ def dependency_tree(item_name, by_output, item_map, by_group, seen=None, depth=0
     if depth >= 5 or budget[0] <= 0:
         return ""
     if item_name in seen:
-        return f'<li>{esc(item_label(item_name, item_map))} <em>(dependency cycle)</em></li>'
+        return f"<li>{esc(item_label(item_name, item_map))} <em>(dependency cycle)</em></li>"
     recipes = by_output.get(item_name, [])
     recipe = next((r for r in recipes if r.get("method") == "normal"), None)
     if not recipe:
@@ -360,14 +385,14 @@ def dependency_tree(item_name, by_output, item_map, by_group, seen=None, depth=0
         if budget[0] < 0:
             break
         if isinstance(value, str) and value.startswith("group:"):
-            children.append(f'<li>{esc(format_ingredient(value, item_map, by_group))}</li>')
+            children.append(f"<li>{esc(format_ingredient(value, item_map, by_group))}</li>")
         else:
             ingredient, count = parse_stack(value)
             nested = dependency_tree(ingredient, by_output, item_map, by_group, seen, depth + 1, budget)
             label = item_label(ingredient, item_map)
             qty = f" ({count} required)" if count and count > 1 else ""
-            children.append(f'<li>{esc(label + qty)}{("<ul>" + nested + "</ul>") if nested else ""}</li>')
-    return ''.join(children)
+            children.append(f"<li>{esc(label + qty)}{('<ul>' + nested + '</ul>') if nested else ''}</li>")
+    return "".join(children)
 
 
 def item_details(item, item_map, by_output, by_group, image_base, recipe_anchor_map):
@@ -391,7 +416,10 @@ def item_details(item, item_map, by_output, by_group, image_base, recipe_anchor_
         info = safe_dict(info)
         uses = info.get("uses")
         maxlevel = info.get("maxlevel")
-        details.append(f"Digging group {group}: max level {number(maxlevel) or 'not specified'}, uses {number(uses) or 'not specified'}")
+        details.append(
+            f"Digging group {group}: max level {number(maxlevel) or 'not specified'}, "
+            f"uses {number(uses) or 'not specified'}"
+        )
     ag = safe_dict(item.get("armor_groups"))
     if ag:
         details.append("Armor protection groups: " + ", ".join(f"{k} {number(v)}" for k, v in sorted(ag.items())))
@@ -404,83 +432,262 @@ def item_details(item, item_map, by_output, by_group, image_base, recipe_anchor_
     group_text = ", ".join(f"{k}={number(v)}" for k, v in sorted(relevant_groups)[:18])
     image = item.get("inventory_image") or ""
     image_mod = item.get("mod") or "unknown"
-    image_url = (image_base.rstrip("/") + "/" + str(image_mod).strip("/") + "/" + image.lstrip("/")) if image and image_base else ""
+    image_url = (
+        image_base.rstrip("/") + "/" + str(image_mod).strip("/") + "/" + image.lstrip("/")
+        if image and image_base
+        else ""
+    )
     recipes = by_output.get(name, [])
-    recipe_link = f'<a href="#recipe-{recipe_anchor_map[name]}" class="recipe-count">{len(recipes)} known crafting/cooking recipe(s)</a>' if recipes and name in recipe_anchor_map else '<span class="muted">No crafting or cooking recipe found in this export.</span>'
+    if recipes and name in recipe_anchor_map:
+        recipe_link = (
+            f'<a href="#recipe-{recipe_anchor_map[name]}" class="recipe-count" '
+            f'data-recipe-index="{recipe_anchor_map[name]}">'
+            f"{len(recipes)} known crafting/cooking recipe(s)</a>"
+        )
+    else:
+        recipe_link = '<span class="muted">No crafting or cooking recipe found in this export.</span>'
     dependency = dependency_tree(name, by_output, item_map, by_group, budget=[12]) if recipes else ""
     dependency_html = (
-        '<details><summary>One possible ingredient chain</summary><ul>' + dependency +
-        '</ul><small>Uses one available normal recipe at each step. Other recipes remain available in the recipe guide.</small></details>'
-        if dependency else ""
+        "<details><summary>One possible ingredient chain</summary><ul>"
+        + dependency
+        + "</ul><small>Uses one available normal recipe at each step. "
+        "Other recipes remain available in the recipe guide.</small></details>"
+        if dependency
+        else ""
     )
-    img = f'<img loading="lazy" src="{esc(image_url)}" alt="" onerror="this.hidden=true">' if image_url else '<span class="no-image">No image</span>'
-    return (f'<tr class="searchable" data-search="{esc(name + " " + desc + " " + item.get("mod", "") + " " + group_text)}">'
-            f'<td class="item-name">{img}<span><b>{esc(display_name)}</b><small>{esc(name or '(empty item name)')}</small></span></td>'
-            f'<td>{esc(item.get("mod") or "unknown")}</td><td>{esc(item.get("category") or "item")}</td>'
-            f'<td>{esc("; ".join(details))}<details><summary>Groups</summary>{esc(group_text or "No groups")}</details><div>{recipe_link}</div>{dependency_html}</td></tr>')
+    img = (
+        f'<img loading="lazy" src="{esc(image_url)}" alt="" onerror="this.hidden=true">'
+        if image_url
+        else '<span class="no-image">No image</span>'
+    )
+    search_blob = " ".join(
+        [
+            name,
+            desc,
+            display_name,
+            item.get("mod") or "",
+            item.get("category") or "",
+            group_text,
+            " ".join(details),
+        ]
+    )
+    return (
+        f'<tr class="searchable" data-search="{esc(search_blob)}">'
+        f'<td class="item-name">{img}<span><b>{esc(display_name)}</b>'
+        f"<small>{esc(name or '(empty item name)')}</small></span></td>"
+        f'<td>{esc(item.get("mod") or "unknown")}</td>'
+        f'<td>{esc(item.get("category") or "item")}</td>'
+        f'<td>{esc("; ".join(details))}'
+        f"<details><summary>Groups</summary>{esc(group_text or 'No groups')}</details>"
+        f"<div>{recipe_link}</div>{dependency_html}</td></tr>"
+    )
 
 
-def render_ranking_tables(weapons, tools, armor, item_map):
+def _render_weapon_only(weapons, item_map):
     out = []
-    out.append('<section id="weapons"><h2>Weapon comparisons</h2><p class="intro">Rankings use the exported damage-group values. The damage-per-interval figure is a theoretical comparison (damage value ÷ full-punch interval), not a promise of in-game DPS. Different damage types are ranked separately.</p>')
     for dtype in sorted({r["damage_type"] for r in weapons}):
         rows = [r for r in weapons if r["damage_type"] == dtype]
-        rows.sort(key=lambda r: (r["damage"], r["estimate"] if r["estimate"] is not None else -1, r["item"].get("name", "")))
-        out.append(f'<h3>{esc(dtype.title())} damage · weakest to strongest</h3><table><thead><tr><th>Rank</th><th>Weapon</th><th>Damage value</th><th>Full-punch interval</th><th>Comparison estimate</th></tr></thead><tbody>')
-        last = None; rank = 0
+        rows.sort(
+            key=lambda r: (
+                r["damage"],
+                r["estimate"] if r["estimate"] is not None else -1,
+                r["item"].get("name", ""),
+            )
+        )
+        out.append(
+            f"<h3>{esc(dtype.title())} damage · weakest to strongest</h3>"
+            "<table><thead><tr><th>Rank</th><th>Weapon</th><th>Damage value</th>"
+            "<th>Full-punch interval</th><th>Comparison estimate</th></tr></thead><tbody>"
+        )
+        last = None
+        rank = 0
         for i, r in enumerate(rows, 1):
             score = (r["damage"], r["estimate"])
-            if score != last: rank = i; last = score
-            out.append(f'<tr class="searchable" data-search="{esc(r["item"].get("name", "") + " " + item_label(r["item"].get("name"), item_map))}"><td>{rank}</td><td>{esc(item_label(r["item"].get("name"), item_map))}<small>{esc(r["item"].get("name"))}</small></td><td>{esc(number(r["damage"]))}</td><td>{esc(number(r["interval"]) + " s" if r["interval"] else "Not exported")}</td><td>{esc(number(r["estimate"]) if r["estimate"] is not None else "Not calculable")}</td></tr>')
-        out.append('</tbody></table>')
-    out.append('</section>')
+            if score != last:
+                rank = i
+                last = score
+            label = item_label(r["item"].get("name"), item_map)
+            search_blob = f'{r["item"].get("name", "")} {label} {dtype}'
+            out.append(
+                f'<tr class="searchable" data-search="{esc(search_blob)}">'
+                f"<td>{rank}</td>"
+                f"<td>{esc(label)}<small>{esc(r['item'].get('name'))}</small></td>"
+                f"<td>{esc(number(r['damage']))}</td>"
+                f"<td>{esc(number(r['interval']) + ' s' if r['interval'] else 'Not exported')}</td>"
+                f"<td>{esc(number(r['estimate']) if r['estimate'] is not None else 'Not calculable')}</td>"
+                f"</tr>"
+            )
+        out.append("</tbody></table>")
+    return "".join(out) or "<p>No weapon comparison data available.</p>"
 
-    out.append('<section id="tools"><h2>Tool comparisons</h2><p class="intro">Lower digging time is faster. Values are compared only within the same digging group and level. Durability is shown as exported uses; it is not converted into an overall score.</p>')
+
+def _render_tool_only(tools, item_map):
+    out = ["<h3>Tool rankings</h3>"]
     groups = sorted({(r["group"], r["level"]) for r in tools})
     for group, level in groups:
         rows = [r for r in tools if r["group"] == group and r["level"] == level]
         rows.sort(key=lambda r: (r["seconds"], r["item"].get("name", "")))
-        out.append(f'<h3>{esc(group)} · level {level} · fastest to slowest</h3><table><thead><tr><th>Rank</th><th>Tool</th><th>Dig time</th><th>Durability uses</th><th>Maximum level</th></tr></thead><tbody>')
-        last = None; rank = 0
+        out.append(
+            f"<h3>{esc(group)} · level {level} · fastest to slowest</h3>"
+            "<table><thead><tr><th>Rank</th><th>Tool</th><th>Dig time</th>"
+            "<th>Durability uses</th><th>Maximum level</th></tr></thead><tbody>"
+        )
+        last = None
+        rank = 0
         for i, r in enumerate(rows, 1):
-            if r["seconds"] != last: rank = i; last = r["seconds"]
+            if r["seconds"] != last:
+                rank = i
+                last = r["seconds"]
             uses = number(r["uses"]) if r["uses"] is not None else "Not exported"
-            out.append(f'<tr class="searchable" data-search="{esc(r["item"].get("name", "") + " " + item_label(r["item"].get("name"), item_map))}"><td>{rank}</td><td>{esc(item_label(r["item"].get("name"), item_map))}<small>{esc(r["item"].get("name"))}</small></td><td>{esc(number(r["seconds"]))} s</td><td>{esc(uses)}</td><td>{esc(number(r["maxlevel"]) or "Not exported")}</td></tr>')
-        out.append('</tbody></table>')
-    out.append('</section>')
+            label = item_label(r["item"].get("name"), item_map)
+            search_blob = f'{r["item"].get("name", "")} {label} {group} level {level}'
+            out.append(
+                f'<tr class="searchable" data-search="{esc(search_blob)}">'
+                f"<td>{rank}</td>"
+                f"<td>{esc(label)}<small>{esc(r['item'].get('name'))}</small></td>"
+                f"<td>{esc(number(r['seconds']))} s</td>"
+                f"<td>{esc(uses)}</td>"
+                f"<td>{esc(number(r['maxlevel']) or 'Not exported')}</td>"
+                f"</tr>"
+            )
+        out.append("</tbody></table>")
+    return "".join(out)
 
-    out.append('<section id="armor"><h2>Armor comparisons</h2><p class="intro">Armor values are kept in separate comparisons by exported field and damage type. Values from different armor systems or fields are not mixed, and these numbers are not presented as damage-reduction percentages.</p>')
+
+def _render_armor_only(armor, item_map):
+    out = ["<h3>Armor rankings</h3>"]
     keys = sorted({(r["slot"], r["type"], r["source"]) for r in armor})
     for slot, dtype, source in keys:
         rows = [r for r in armor if (r["slot"], r["type"], r["source"]) == (slot, dtype, source)]
         rows.sort(key=lambda r: (r["value"], r["item"].get("name", "")))
-        out.append(f'<h3>{esc(slot.title())} · {esc(dtype)} · {esc(source)} · lowest to highest</h3><table><thead><tr><th>Rank</th><th>Armor</th><th>Exported value</th><th>Mod</th></tr></thead><tbody>')
-        last = None; rank = 0
+        out.append(
+            f"<h3>{esc(slot.title())} · {esc(dtype)} · {esc(source)} · lowest to highest</h3>"
+            "<table><thead><tr><th>Rank</th><th>Armor</th><th>Exported value</th>"
+            "<th>Mod</th></tr></thead><tbody>"
+        )
+        last = None
+        rank = 0
         for i, r in enumerate(rows, 1):
-            if r["value"] != last: rank = i; last = r["value"]
-            out.append(f'<tr class="searchable" data-search="{esc(r["item"].get("name", "") + " " + item_label(r["item"].get("name"), item_map))}"><td>{rank}</td><td>{esc(item_label(r["item"].get("name"), item_map))}<small>{esc(r["item"].get("name"))}</small></td><td>{esc(number(r["value"]))}</td><td>{esc(r["item"].get("mod") or "unknown")}</td></tr>')
-        out.append('</tbody></table>')
-    out.append('</section>')
-    return ''.join(out)
+            if r["value"] != last:
+                rank = i
+                last = r["value"]
+            label = item_label(r["item"].get("name"), item_map)
+            search_blob = f'{r["item"].get("name", "")} {label} {slot} {dtype}'
+            out.append(
+                f'<tr class="searchable" data-search="{esc(search_blob)}">'
+                f"<td>{rank}</td>"
+                f"<td>{esc(label)}<small>{esc(r['item'].get('name'))}</small></td>"
+                f"<td>{esc(number(r['value']))}</td>"
+                f"<td>{esc(r['item'].get('mod') or 'unknown')}</td>"
+                f"</tr>"
+            )
+        out.append("</tbody></table>")
+    return "".join(out)
+
+
+def build_search_index(
+    item_rows,
+    recipe_html,
+    fuel_html,
+    entity_rows,
+    weapons,
+    tools,
+    armor,
+    item_map,
+    by_output,
+    by_group,
+    all_valid,
+    fuels,
+    entities,
+):
+    """Compact prebuilt search text so the browser does not parse HTML on every keystroke."""
+    items_index = []
+    for i, row in enumerate(item_rows):
+        # data-search is already escaped for HTML attributes; store plain-ish text from the row.
+        # Prefer reconstructing from source fields when possible via the row HTML data-search.
+        m = re.search(r'data-search="([^"]*)"', row["html"])
+        text = html.unescape(m.group(1)) if m else ""
+        items_index.append({"i": i, "c": row["category"], "t": text.lower()})
+
+    recipes_index = []
+    for i, recipe in enumerate(all_valid):
+        output = recipe.get("output_item") or ""
+        title = item_label(output, item_map)
+        parts = [output, title, recipe.get("method") or ""]
+        for value in safe_list(recipe.get("items")):
+            if not value:
+                continue
+            parts.append(str(value))
+            parts.append(format_ingredient(value, item_map, by_group))
+            name, _ = parse_stack(value) if isinstance(value, str) and not value.startswith("group:") else ("", None)
+            if name:
+                parts.append(item_label(name, item_map))
+        recipes_index.append({"i": i, "t": " ".join(parts).lower()})
+
+    fuel_index = []
+    for i, recipe in enumerate(fuels):
+        source = ""
+        for value in safe_list(recipe.get("items")):
+            if value:
+                source = value
+                break
+        name, _ = parse_stack(source) if isinstance(source, str) else ("", None)
+        parts = [source or "", item_label(name or source, item_map), "fuel"]
+        fuel_index.append({"i": i, "t": " ".join(parts).lower()})
+
+    entities_index = []
+    for i, entity in enumerate(sorted(entities, key=lambda x: x.get("name", ""))):
+        desc = clean_text(entity.get("description")) or item_label(entity.get("name"))
+        parts = [
+            entity.get("name") or "",
+            desc,
+            entity.get("mod") or "",
+        ]
+        entities_index.append({"i": i, "t": " ".join(parts).lower()})
+
+    def ranking_index(rows, kind):
+        index = []
+        for i, r in enumerate(rows):
+            name = r["item"].get("name") or ""
+            label = item_label(name, item_map)
+            if kind == "weapons":
+                extra = f'{r.get("damage_type", "")} {number(r.get("damage"))}'
+            elif kind == "tools":
+                extra = f'{r.get("group", "")} level {r.get("level", "")}'
+            else:
+                extra = f'{r.get("slot", "")} {r.get("type", "")}'
+            index.append({"i": i, "t": f"{name} {label} {extra}".lower()})
+        return index
+
+    return {
+        "items": items_index,
+        "recipes": recipes_index,
+        "fuel": fuel_index,
+        "entities": entities_index,
+        "weapons": ranking_index(weapons, "weapons"),
+        "tools": ranking_index(tools, "tools"),
+        "armor": ranking_index(armor, "armor"),
+    }
 
 
 def main():
     parser = argparse.ArgumentParser(description="Generate the JustCraft player reference website.")
     parser.add_argument("input", nargs="?", default="jc_information.json", help="Input JSON or .json.gz export")
     parser.add_argument("-o", "--output", default="jc_information_docs", help="Output directory")
-    parser.add_argument("--image-base", default="images", help="Relative URL/path prefix for inventory images; use empty string to disable")
+    parser.add_argument(
+        "--image-base",
+        default="images",
+        help="Relative URL/path prefix for inventory images; use empty string to disable",
+    )
     args = parser.parse_args()
     source = Path(args.input)
     outdir = Path(args.output)
     data = load_json(source)
-    data["items"] = [
-        item for item in safe_list(data.get("items"))
-        if item.get("mod") != "animalworld"
-    ]
 
+    # Exclude animalworld content from the player handbook.
+    data["items"] = [item for item in safe_list(data.get("items")) if item.get("mod") != "animalworld"]
     data["entities"] = [
-        entity for entity in safe_list(data.get("entities"))
-        if entity.get("mod") != "animalworld"
+        entity for entity in safe_list(data.get("entities")) if entity.get("mod") != "animalworld"
     ]
 
     items, item_map, crafts, by_output, by_group = build_indexes(data)
@@ -507,35 +714,63 @@ def main():
     fuels = [r for r in crafts if r.get("method") == "fuel" and safe_list(r.get("items"))]
     invalid_cooking = [r for r in crafts if r.get("method") == "cooking" and not r.get("output_item")]
     all_valid = sorted(valid_normal + valid_cooking, key=recipe_sort_key)
+
+    # Map each craftable item name to the first recipe card index in the Recipes section.
     recipe_anchor_map = {}
     for i, recipe in enumerate(all_valid):
         recipe_anchor_map.setdefault(recipe.get("output_item") or "", i)
 
-    # Pre-render the existing detailed markup into small, separately fetched datasets.
     item_rows = []
     for cat in sorted(categories):
         for item in sorted(categories[cat], key=lambda x: x.get("name", "")):
-            item_rows.append({"category": cat.replace("_", " ").title(),
-                              "html": item_details(item, item_map, by_output, by_group, image_base, recipe_anchor_map)})
+            item_rows.append(
+                {
+                    "category": cat.replace("_", " ").title(),
+                    "html": item_details(
+                        item, item_map, by_output, by_group, image_base, recipe_anchor_map
+                    ),
+                }
+            )
 
-    #  recipe_html = [render_recipe(r, item_map, by_group, i) for i, r in enumerate(all_valid)]
-    #  fuel_html = [render_recipe(r, item_map, by_group, i) for i, r in enumerate(fuels)]
     recipe_html = [render_recipe(r, item_map, by_group, i, image_base) for i, r in enumerate(all_valid)]
     fuel_html = [render_recipe(r, item_map, by_group, i, image_base) for i, r in enumerate(fuels)]
 
     entity_rows = []
-    for entity in sorted(entities, key=lambda x: x.get("name", "")):
+    sorted_entities = sorted(entities, key=lambda x: x.get("name", ""))
+    for entity in sorted_entities:
         props = safe_dict(entity.get("initial_properties"))
         hp_min = entity.get("hp_min")
         hp_max = entity.get("hp_max") if entity.get("hp_max") is not None else props.get("hp_max")
-        hp = (f"{number(hp_min)}–{number(hp_max)}" if hp_min is not None and hp_max is not None else number(hp_max) or number(hp_min) or "Not exported")
+        hp = (
+            f"{number(hp_min)}–{number(hp_max)}"
+            if hp_min is not None and hp_max is not None
+            else number(hp_max) or number(hp_min) or "Not exported"
+        )
         drops = safe_list(entity.get("drops"))
-        drop_text = ', '.join(f"{d.get('name', 'unknown')} ({number(d.get('min')) or '?'}–{number(d.get('max')) or '?'}, chance {number(d.get('chance')) or '?'})" for d in drops if isinstance(d, dict)) or "No drop data exported"
+        drop_text = (
+            ", ".join(
+                f"{d.get('name', 'unknown')} ({number(d.get('min')) or '?'}–{number(d.get('max')) or '?'}, "
+                f"chance {number(d.get('chance')) or '?'})"
+                for d in drops
+                if isinstance(d, dict)
+            )
+            or "No drop data exported"
+        )
         desc = clean_text(entity.get("description")) or item_label(entity.get("name"))
         ag = safe_dict(entity.get("armor_groups")) or safe_dict(props.get("armor_groups"))
-        armor_text = ', '.join(f"{k}={number(v)}" for k, v in sorted(ag.items())) or "Not exported"
+        armor_text = ", ".join(f"{k}={number(v)}" for k, v in sorted(ag.items())) or "Not exported"
         physical = props.get("physical")
-        entity_rows.append(f'<tr class="searchable" data-search="{esc(entity.get("name", "") + " " + desc + " " + entity.get("mod", ""))}"><td><b>{esc(desc)}</b><small>{esc(entity.get("name"))}</small></td><td>{esc(entity.get("mod") or "unknown")}</td><td>{esc(hp)}</td><td>{esc(armor_text)}</td><td>{esc(drop_text)}</td><td>{esc("Yes" if physical else "No" if physical is False else "Not exported")}</td></tr>')
+        search_blob = f'{entity.get("name", "")} {desc} {entity.get("mod", "")}'
+        entity_rows.append(
+            f'<tr class="searchable" data-search="{esc(search_blob)}">'
+            f"<td><b>{esc(desc)}</b><small>{esc(entity.get('name'))}</small></td>"
+            f"<td>{esc(entity.get('mod') or 'unknown')}</td>"
+            f"<td>{esc(hp)}</td>"
+            f"<td>{esc(armor_text)}</td>"
+            f"<td>{esc(drop_text)}</td>"
+            f"<td>{esc('Yes' if physical else 'No' if physical is False else 'Not exported')}</td>"
+            f"</tr>"
+        )
 
     game = safe_dict(data.get("game"))
     title = clean_text(game.get("title")) or "JustCraft"
@@ -547,6 +782,22 @@ def main():
         "armor": _render_armor_only(armor, item_map),
     }
 
+    search_index = build_search_index(
+        item_rows,
+        recipe_html,
+        fuel_html,
+        entity_rows,
+        weapons,
+        tools,
+        armor,
+        item_map,
+        by_output,
+        by_group,
+        all_valid,
+        fuels,
+        entities,
+    )
+
     page = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Player reference for items, weapons, tools, armor, crafting, cooking, fuel and creatures in JustCraft.">
@@ -554,7 +805,7 @@ def main():
 <header><h1>JustCraft Player Handbook</h1><p>Items, equipment, crafting, cooking, fuel and creatures from the live server export.</p></header>
 <main class="wrap"><div class="stats"><div class="stat"><b>{len(items):,}</b>Items</div><div class="stat"><b>{len(weapons):,}</b>Weapon damage entries</div><div class="stat"><b>{len(tools):,}</b>Tool capability entries</div><div class="stat"><b>{len(armor):,}</b>Armor value entries</div><div class="stat"><b>{len(valid_normal):,}</b>Crafting recipes</div><div class="stat"><b>{len(entities):,}</b>Entities</div></div>
 <p class="muted">Game: {esc(title)} · Exported: {esc(generated)} · Schema: {esc(data.get('schema_version'))}</p>
-<div class="toolbar"><input id="search" type="search" placeholder="Search items, mods, ingredients, recipes or creatures…"><nav>
+<div class="toolbar"><input id="search" type="search" placeholder="Search items, mods, ingredients, recipes or creatures…" autocomplete="off"><nav>
 <a href="#items">Items</a><a href="#weapons">Weapons</a><a href="#tools">Tools</a><a href="#armor">Armor</a><a href="#recipes">Recipes</a><a href="#fuel">Fuel</a><a href="#entities">Creatures &amp; entities</a></nav></div>
 <p id="data-status" role="status" aria-live="polite">Loading handbook data…</p>
 <section id="items"><h2>Item catalogue</h2><p class="intro">Descriptions and properties come from registered item definitions. Missing values are left unspecified. Images use the inventory_image filename from the export and the configured image path.</p><div class="section-status" aria-live="polite">Open Items to load the catalogue.</div><div class="section-content"></div></section>
@@ -572,10 +823,14 @@ def main():
   const cache = {{}};
   const state = {{}};
   const loading = {{}};
+  let searchIndex = null;
   const configs = {{
-    items: {{file:'items.json',key:'rows',kind:'rows'}}, weapons:{{file:'rankings.json',key:'weapons',kind:'html'}},
-    tools:{{file:'rankings.json',key:'tools',kind:'html'}}, armor:{{file:'rankings.json',key:'armor',kind:'html'}},
-    recipes:{{file:'recipes.json',key:'recipes',kind:'rows'}}, fuel:{{file:'recipes.json',key:'fuel',kind:'rows'}},
+    items: {{file:'items.json',key:'rows',kind:'rows'}},
+    weapons:{{file:'rankings.json',key:'weapons',kind:'html'}},
+    tools:{{file:'rankings.json',key:'tools',kind:'html'}},
+    armor:{{file:'rankings.json',key:'armor',kind:'html'}},
+    recipes:{{file:'recipes.json',key:'recipes',kind:'rows'}},
+    fuel:{{file:'recipes.json',key:'fuel',kind:'rows'}},
     entities:{{file:'entities.json',key:'rows',kind:'rows'}}
   }};
   const section = id => document.getElementById(id);
@@ -583,73 +838,118 @@ def main():
   const content = id => section(id).querySelector('.section-content');
   function setStatus(id, message) {{ status(id).textContent = message; }}
   async function getData(file) {{
-    if (!cache[file]) cache[file] = fetch(file).then(r => {{ if (!r.ok) throw new Error(`HTTP ${{r.status}} loading ${{file}}`); return r.json(); }});
+    if (!cache[file]) {{
+      cache[file] = fetch(file).then(r => {{
+        if (!r.ok) throw new Error('HTTP ' + r.status + ' loading ' + file);
+        return r.json();
+      }});
+    }}
     return cache[file];
+  }}
+  async function getSearchIndex() {{
+    if (!searchIndex) searchIndex = await getData('search-index.json');
+    return searchIndex;
   }}
   function appendBatch(id, reset=false) {{
     const s = state[id]; if (!s) return;
-    if (reset) {{ s.position = 0; content(id).innerHTML = s.prefix || (id === 'entities' ? '<table><thead><tr><th>Entity</th><th>Mod</th><th>Health</th><th>Armor groups</th><th>Drops</th><th>Physical</th></tr></thead><tbody class="entity-rows"></tbody></table>' : ''); }}
+    if (reset) {{
+      s.position = 0;
+      content(id).innerHTML = s.prefix || (id === 'entities'
+        ? '<table><thead><tr><th>Entity</th><th>Mod</th><th>Health</th><th>Armor groups</th><th>Drops</th><th>Physical</th></tr></thead><tbody class="entity-rows"></tbody></table>'
+        : '');
+    }}
     const batch = s.rows.slice(s.position, s.position + batchSize);
-    if (id === 'entities') {{ content(id).querySelector('.entity-rows').insertAdjacentHTML('beforeend', batch.join('')); }}
-    else if (id === 'items') {{
-      const groups={{}};
+    if (id === 'entities') {{
+      const body = content(id).querySelector('.entity-rows');
+      if (body) body.insertAdjacentHTML('beforeend', batch.join(''));
+    }} else if (id === 'items') {{
+      const groups = {{}};
       for (const entry of batch) (groups[entry.category] ||= []).push(entry.html);
       for (const [category, htmlRows] of Object.entries(groups)) {{
-        content(id).insertAdjacentHTML('beforeend', `<h3>${{category}}</h3><table><thead><tr><th>Item</th><th>Mod</th><th>Type</th><th>Capabilities and information</th></tr></thead><tbody>${{htmlRows.join('')}}</tbody></table>`);
+        content(id).insertAdjacentHTML('beforeend',
+          '<h3>' + category + '</h3><table><thead><tr><th>Item</th><th>Mod</th><th>Type</th><th>Capabilities and information</th></tr></thead><tbody>' +
+          htmlRows.join('') + '</tbody></table>');
       }}
-    }} else content(id).insertAdjacentHTML('beforeend', batch.join(''));
+    }} else {{
+      content(id).insertAdjacentHTML('beforeend', batch.join(''));
+    }}
     s.position += batch.length;
     const old = section(id).querySelector('.load-more'); if (old) old.remove();
     if (s.position < s.rows.length) {{
-      const button = document.createElement('button'); button.className='load-more'; button.type='button';
-      button.textContent = `Load 50 more (${{s.rows.length - s.position}} remaining)`;
-      button.addEventListener('click', () => appendBatch(id)); content(id).appendChild(button);
+      const button = document.createElement('button');
+      button.className = 'load-more';
+      button.type = 'button';
+      button.textContent = 'Load 50 more (' + (s.rows.length - s.position) + ' remaining)';
+      button.addEventListener('click', () => appendBatch(id));
+      content(id).appendChild(button);
     }}
-    setStatus(id, s.rows.length ? `${{Math.min(s.position,s.rows.length)}} of ${{s.rows.length}} loaded` : 'No records found.');
+    setStatus(id, s.rows.length
+      ? (Math.min(s.position, s.rows.length) + ' of ' + s.rows.length + ' loaded')
+      : 'No records found.');
+  }}
+  async function ensureRecipeVisible(targetIndex) {{
+    await loadSection('recipes');
+    const s = state.recipes;
+    if (!s) return null;
+    while (s.position <= targetIndex && s.position < s.rows.length) appendBatch('recipes');
+    return document.getElementById('recipe-' + targetIndex);
   }}
   async function loadSection(id) {{
     if (state[id]) return;
     if (loading[id]) return loading[id];
-    const cfg = configs[id]; setStatus(id, 'Loading…');
+    const cfg = configs[id];
+    setStatus(id, 'Loading…');
     loading[id] = (async () => {{
       try {{
         const data = await getData(cfg.file);
         let rows = cfg.key ? data[cfg.key] : data;
-        if (cfg.kind === 'html') {{ content(id).innerHTML = rows || '<p>No comparison data available.</p>'; setStatus(id, 'Loaded.'); state[id]={{rows:[],position:0}}; return; }}
-        let prefix = '';
-        if (id === 'entities') {{ state[id]={{rows,position:0}}; appendBatch(id,true); }}
-        else {{ state[id]={{rows,position:0,prefix}}; appendBatch(id,true); }}
-      }} catch (error) {{ console.error(error); setStatus(id, 'Could not load this section. Check the JSON file and server response.'); }}
-      finally {{ delete loading[id]; }}
+        if (cfg.kind === 'html') {{
+          content(id).innerHTML = rows || '<p>No comparison data available.</p>';
+          setStatus(id, 'Loaded.');
+          state[id] = {{rows: [], position: 0}};
+          return;
+        }}
+        state[id] = {{rows: rows, position: 0, prefix: ''}};
+        appendBatch(id, true);
+      }} catch (error) {{
+        console.error(error);
+        setStatus(id, 'Could not load this section. Check the JSON file and server response.');
+      }} finally {{
+        delete loading[id];
+      }}
     }})();
     return loading[id];
   }}
   const navIds = ['items','weapons','tools','armor','recipes','fuel','entities'];
-  function activeSection() {{ const id=location.hash.slice(1); return navIds.includes(id) ? id : ''; }}
+  function activeSection() {{
+    const id = location.hash.slice(1);
+    return navIds.includes(id) ? id : '';
+  }}
+  async function scrollToRecipe(targetIndex) {{
+    const target = await ensureRecipeVisible(targetIndex);
+    if (!target) return;
+    requestAnimationFrame(() => {{
+      const top = target.getBoundingClientRect().top + window.scrollY - 120;
+      window.scrollTo({{ top: top, behavior: 'smooth' }});
+    }});
+  }}
   async function onHash() {{
     const hash = decodeURIComponent(location.hash.slice(1));
     const recipeMatch = hash.match(/^recipe-(\\d+)$/);
     if (recipeMatch) {{
-      await loadSection('recipes');
-      const targetIndex = Number(recipeMatch[1]);
-      const s = state.recipes;
-      while (s && s.position <= targetIndex && s.position < s.rows.length) appendBatch('recipes');
-      const target = document.getElementById(hash);
-      if (target) requestAnimationFrame(() => {{
-        const top = target.getBoundingClientRect().top + window.scrollY - 120;
-        window.scrollTo({{top: top, behavior: 'smooth'}});
-      }});
+      await scrollToRecipe(Number(recipeMatch[1]));
       return;
     }}
-    const id=activeSection(); if (id) await loadSection(id);
+    const id = activeSection();
+    if (id) await loadSection(id);
   }}
   async function loadAllSections() {{
     const indicator = document.getElementById('data-status');
     try {{
-      const results = await Promise.all(navIds.map(loadSection));
+      await Promise.all(navIds.map(loadSection));
       const failed = navIds.filter(id => !state[id]);
       indicator.textContent = failed.length
-        ? `Some handbook data could not be loaded: ${{failed.join(', ')}}.`
+        ? ('Some handbook data could not be loaded: ' + failed.join(', ') + '.')
         : 'Handbook data loaded.';
       if (!failed.length) indicator.hidden = true;
     }} catch (error) {{
@@ -658,47 +958,139 @@ def main():
     }}
   }}
   window.addEventListener('hashchange', onHash);
-  document.querySelectorAll('.toolbar nav a').forEach(a => a.addEventListener('click', () => {{ const id=a.getAttribute('href').slice(1); loadSection(id); }}));
+  document.querySelectorAll('.toolbar nav a').forEach(a => {{
+    a.addEventListener('click', () => {{
+      const id = a.getAttribute('href').slice(1);
+      loadSection(id);
+    }});
+  }});
+  // Recipe-count links: force navigation even when the hash is unchanged.
+  document.addEventListener('click', async (event) => {{
+    const link = event.target.closest('a.recipe-count[data-recipe-index]');
+    if (!link) return;
+    const idx = Number(link.getAttribute('data-recipe-index'));
+    if (!Number.isFinite(idx)) return;
+    const desired = '#recipe-' + idx;
+    if (location.hash === desired) {{
+      event.preventDefault();
+      await scrollToRecipe(idx);
+    }}
+  }});
   loadAllSections();
+  onHash();
 
-  const search = document.getElementById('search'); let searchTimer;
-  search.addEventListener('input', () => {{
-    clearTimeout(searchTimer); searchTimer=setTimeout(async () => {{
-      const q=search.value.trim().toLowerCase();
-      if (!q) {{
-        for (const id of navIds) {{
-          if (!state[id]) continue;
-          const cfg=configs[id], data=await getData(cfg.file), rows=cfg.key?data[cfg.key]:data;
-          if (cfg.kind==='html') {{ content(id).innerHTML=rows||''; state[id]={{rows:[],position:0}}; setStatus(id,'Loaded.'); }}
-          else {{ state[id]={{rows,position:0}}; appendBatch(id,true); }}
-        }}
-        document.querySelectorAll('.searchable').forEach(el=>el.hidden=false); return;
+  async function clearSearch() {{
+    for (const id of navIds) {{
+      if (!state[id]) continue;
+      const cfg = configs[id];
+      const data = await getData(cfg.file);
+      const rows = cfg.key ? data[cfg.key] : data;
+      if (cfg.kind === 'html') {{
+        content(id).innerHTML = rows || '';
+        state[id] = {{rows: [], position: 0}};
+        setStatus(id, 'Loaded.');
+      }} else {{
+        state[id] = {{rows: rows, position: 0}};
+        appendBatch(id, true);
       }}
-      try {{
-        await Promise.all(navIds.map(loadSection));
-        // Search all loaded section markup, including records beyond the first visible batch.
-        for (const id of navIds) {{
-          const cfg=configs[id], data=await getData(cfg.file); let rows=cfg.key?data[cfg.key]:data;
-          if (cfg.kind==='html') {{
-            if (!state[id]?.searched) {{ content(id).innerHTML=rows||''; state[id]={{searched:true,rows:[]}}; }}
-            section(id).querySelectorAll('.searchable').forEach(el=>{{el.hidden=!el.textContent.toLowerCase().includes(q);}});
-          }} else {{
-            if (id==='items') {{
-              const matches=rows.filter(x=>{{const h=document.createElement('div');h.innerHTML=x.html;return h.textContent.toLowerCase().includes(q);}});
-              const groups={{}}; for (const entry of matches) (groups[entry.category] ||= []).push(entry.html);
-              content(id).innerHTML=Object.entries(groups).map(([category,htmlRows])=>`<h3>${{category}}</h3><table><thead><tr><th>Item</th><th>Mod</th><th>Type</th><th>Capabilities and information</th></tr></thead><tbody>${{htmlRows.join('')}}</tbody></table>`).join('');
-              setStatus(id, `${{matches.length}} matches`);
-            }} else {{
-              const matches=rows.filter(x=>{{ const holder=document.createElement('div'); holder.innerHTML=x; return holder.textContent.toLowerCase().includes(q); }});
-              if (id==='entities') content(id).querySelector('.entity-rows').innerHTML=matches.join('');
-              else content(id).innerHTML=matches.join('');
-              state[id]={{rows:matches,position:matches.length}}; setStatus(id, `${{matches.length}} matches`);
-            }}
-          }}
+    }}
+  }}
+
+  async function runSearch(q) {{
+    const index = await getSearchIndex();
+    await Promise.all(navIds.map(loadSection));
+
+    // Items: filter via index, only render categories that still have matches.
+    {{
+      const data = await getData('items.json');
+      const rows = data.rows || [];
+      const matches = [];
+      for (const entry of (index.items || [])) {{
+        if (entry.t.includes(q)) matches.push(rows[entry.i]);
+      }}
+      const groups = {{}};
+      for (const entry of matches) {{
+        if (!entry) continue;
+        (groups[entry.category] ||= []).push(entry.html);
+      }}
+      const html = Object.entries(groups).map(([category, htmlRows]) =>
+        '<h3>' + category + '</h3><table><thead><tr><th>Item</th><th>Mod</th><th>Type</th><th>Capabilities and information</th></tr></thead><tbody>' +
+        htmlRows.join('') + '</tbody></table>'
+      ).join('');
+      content('items').innerHTML = html || '<p class="muted">No matching items.</p>';
+      state.items = {{rows: matches, position: matches.length}};
+      setStatus('items', matches.length + ' matches');
+    }}
+
+    // Recipes / fuel / entities: filter via index indices.
+    async function filterRows(id, indexKey, file, key) {{
+      const data = await getData(file);
+      const rows = data[key] || [];
+      const hits = [];
+      for (const entry of (index[indexKey] || [])) {{
+        if (entry.t.includes(q)) {{
+          const row = rows[entry.i];
+          if (row != null) hits.push(row);
         }}
-      }} catch(error) {{ console.error(error); }}
+      }}
+      if (id === 'entities') {{
+        const body = content(id).querySelector('.entity-rows');
+        if (body) body.innerHTML = hits.join('') || '';
+        if (!hits.length) content(id).innerHTML = '<p class="muted">No matching entities.</p>';
+      }} else {{
+        content(id).innerHTML = hits.join('') || '<p class="muted">No matches.</p>';
+      }}
+      state[id] = {{rows: hits, position: hits.length}};
+      setStatus(id, hits.length + ' matches');
+    }}
+    await filterRows('recipes', 'recipes', 'recipes.json', 'recipes');
+    await filterRows('fuel', 'fuel', 'recipes.json', 'fuel');
+    await filterRows('entities', 'entities', 'entities.json', 'rows');
+
+    // Rankings: show full HTML then hide non-matching searchable rows; drop empty tables/headings.
+    for (const id of ['weapons', 'tools', 'armor']) {{
+      const data = await getData('rankings.json');
+      const html = data[id] || '';
+      content(id).innerHTML = html || '<p class="muted">No comparison data available.</p>';
+      state[id] = {{rows: [], position: 0, searched: true}};
+      const nodes = section(id).querySelectorAll('.searchable');
+      let visible = 0;
+      nodes.forEach(el => {{
+        const hay = (el.getAttribute('data-search') || el.textContent || '').toLowerCase();
+        const show = hay.includes(q);
+        el.hidden = !show;
+        if (show) visible += 1;
+      }});
+      // Hide empty ranking tables and their preceding h3.
+      content(id).querySelectorAll('table').forEach(table => {{
+        const rows = table.querySelectorAll('tbody tr.searchable');
+        const any = Array.from(rows).some(r => !r.hidden);
+        table.hidden = !any;
+        const prev = table.previousElementSibling;
+        if (prev && prev.tagName === 'H3') prev.hidden = !any;
+      }});
+      setStatus(id, visible + ' matches');
+    }}
+  }}
+
+  const search = document.getElementById('search');
+  let searchTimer;
+  search.addEventListener('input', () => {{
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(async () => {{
+      const q = search.value.trim().toLowerCase();
+      try {{
+        if (!q) {{
+          await clearSearch();
+          return;
+        }}
+        await runSearch(q);
+      }} catch (error) {{
+        console.error(error);
+      }}
     }}, 180);
   }});
+
   const backToTop = document.getElementById('back-to-top');
   const toggleBackToTop = () => {{
     if (window.scrollY > 400) backToTop.classList.add('visible');
@@ -711,11 +1103,14 @@ def main():
   }});
 }})();
 </script></body></html>'''
+
     (outdir / "index.html").write_text(page, encoding="utf-8")
 
-    # JSON payloads are compact; they are not requested until a section is opened.
     def write_json(name, value):
-        (outdir / name).write_text(json.dumps(value, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+        (outdir / name).write_text(
+            json.dumps(value, ensure_ascii=False, separators=(",", ":")),
+            encoding="utf-8",
+        )
 
     cleaned_items = []
     for item in items:
@@ -731,15 +1126,22 @@ def main():
     for i, recipe in enumerate(crafts):
         entry = dict(recipe)
         entry["record_index"] = i
-        entry["display_output"] = item_label(recipe.get("output_item"), item_map) if recipe.get("output_item") else None
-        entry["ingredient_descriptions"] = [format_ingredient(x, item_map, by_group) for x in safe_list(recipe.get("items")) if x]
-        entry["dependency_outputs"] = [x for x in safe_list(recipe.get("items")) if isinstance(x, str) and x in by_output]
+        entry["display_output"] = (
+            item_label(recipe.get("output_item"), item_map) if recipe.get("output_item") else None
+        )
+        entry["ingredient_descriptions"] = [
+            format_ingredient(x, item_map, by_group) for x in safe_list(recipe.get("items")) if x
+        ]
+        entry["dependency_outputs"] = [
+            x for x in safe_list(recipe.get("items")) if isinstance(x, str) and x in by_output
+        ]
         cleaned_recipes.append(entry)
 
     write_json("items.json", {"rows": item_rows, "records": cleaned_items})
     write_json("rankings.json", rankings)
     write_json("recipes.json", {"recipes": recipe_html, "fuel": fuel_html, "records": cleaned_recipes})
     write_json("entities.json", {"rows": entity_rows, "records": entities})
+    write_json("search-index.json", search_index)
 
     readme = f'''# JustCraft Player Handbook
 
@@ -753,7 +1155,7 @@ Generated from `{source.name}`.
 - Cooking recipes with known outputs: {len(valid_cooking):,}
 - Fuel records: {len(fuels):,}
 
-Open `index.html` for the guide. The page shell is small; each section's JSON is fetched when opened, and search loads all datasets on demand.
+Open `index.html` for the guide. The page shell is small; each section's JSON is fetched when opened. Search uses `search-index.json` instead of parsing HTML on every keystroke.
 
 ## Rankings and interpretation
 
@@ -765,6 +1167,7 @@ Open `index.html` for the guide. The page shell is small; each section's JSON is
 ## Recipes
 
 - All usable crafting and cooking instructions are retained in `recipes.json`.
+- Item catalogue recipe-count links jump to the first matching recipe card (`#recipe-N`), loading additional batches as needed.
 - Shaped recipes retain empty grid positions; shapeless recipes do not assign positions.
 - Alternate recipes remain separate records.
 - Fuel records use the fuel item in `items[0]`.
@@ -786,53 +1189,7 @@ No third-party packages are required.
     print(f"Generated documentation in: {outdir.resolve()}")
     print(f"Items: {len(items):,}; entities: {len(entities):,}; recipes: {len(crafts):,}")
     print(f"Usable crafting: {len(valid_normal):,}; cooking: {len(valid_cooking):,}; fuel: {len(fuels):,}")
-
-
-
-def _render_weapon_only(weapons, item_map):
-    out = []
-    for dtype in sorted({r["damage_type"] for r in weapons}):
-        rows = [r for r in weapons if r["damage_type"] == dtype]
-        rows.sort(key=lambda r: (r["damage"], r["estimate"] if r["estimate"] is not None else -1, r["item"].get("name", "")))
-        out.append(f'<h3>{esc(dtype.title())} damage · weakest to strongest</h3><table><thead><tr><th>Rank</th><th>Weapon</th><th>Damage value</th><th>Full-punch interval</th><th>Comparison estimate</th></tr></thead><tbody>')
-        last = None; rank = 0
-        for i, r in enumerate(rows, 1):
-            score = (r["damage"], r["estimate"])
-            if score != last: rank = i; last = score
-            out.append(f'<tr class="searchable" data-search="{esc(r["item"].get("name", "") + " " + item_label(r["item"].get("name"), item_map))}"><td>{rank}</td><td>{esc(item_label(r["item"].get("name"), item_map))}<small>{esc(r["item"].get("name"))}</small></td><td>{esc(number(r["damage"]))}</td><td>{esc(number(r["interval"]) + " s" if r["interval"] else "Not exported")}</td><td>{esc(number(r["estimate"]) if r["estimate"] is not None else "Not calculable")}</td></tr>')
-        out.append('</tbody></table>')
-    return ''.join(out) or '<p>No weapon comparison data available.</p>'
-
-
-def _render_tool_only(tools, item_map):
-    out = ['<h3>Tool rankings</h3>']
-    groups = sorted({(r["group"], r["level"]) for r in tools})
-    for group, level in groups:
-        rows = [r for r in tools if r["group"] == group and r["level"] == level]
-        rows.sort(key=lambda r: (r["seconds"], r["item"].get("name", "")))
-        out.append(f'<h3>{esc(group)} · level {level} · fastest to slowest</h3><table><thead><tr><th>Rank</th><th>Tool</th><th>Dig time</th><th>Durability uses</th><th>Maximum level</th></tr></thead><tbody>')
-        last = None; rank = 0
-        for i, r in enumerate(rows, 1):
-            if r["seconds"] != last: rank = i; last = r["seconds"]
-            uses = number(r["uses"]) if r["uses"] is not None else "Not exported"
-            out.append(f'<tr class="searchable" data-search="{esc(r["item"].get("name", "") + " " + item_label(r["item"].get("name"), item_map))}"><td>{rank}</td><td>{esc(item_label(r["item"].get("name"), item_map))}<small>{esc(r["item"].get("name"))}</small></td><td>{esc(number(r["seconds"]))} s</td><td>{esc(uses)}</td><td>{esc(number(r["maxlevel"]) or "Not exported")}</td></tr>')
-        out.append('</tbody></table>')
-    return ''.join(out)
-
-
-def _render_armor_only(armor, item_map):
-    out = ['<h3>Armor rankings</h3>']
-    keys = sorted({(r["slot"], r["type"], r["source"]) for r in armor})
-    for slot, dtype, source in keys:
-        rows = [r for r in armor if (r["slot"], r["type"], r["source"]) == (slot, dtype, source)]
-        rows.sort(key=lambda r: (r["value"], r["item"].get("name", "")))
-        out.append(f'<h3>{esc(slot.title())} · {esc(dtype)} · {esc(source)} · lowest to highest</h3><table><thead><tr><th>Rank</th><th>Armor</th><th>Exported value</th><th>Mod</th></tr></thead><tbody>')
-        last = None; rank = 0
-        for i, r in enumerate(rows, 1):
-            if r["value"] != last: rank = i; last = r["value"]
-            out.append(f'<tr class="searchable" data-search="{esc(r["item"].get("name", "") + " " + item_label(r["item"].get("name"), item_map))}"><td>{rank}</td><td>{esc(item_label(r["item"].get("name"), item_map))}<small>{esc(r["item"].get("name"))}</small></td><td>{esc(number(r["value"]))}</td><td>{esc(r["item"].get("mod") or "unknown")}</td></tr>')
-        out.append('</tbody></table>')
-    return ''.join(out)
+    print(f"Search index entries: items={len(search_index['items'])}, recipes={len(search_index['recipes'])}")
 
 
 if __name__ == "__main__":
