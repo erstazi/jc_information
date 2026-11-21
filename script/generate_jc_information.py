@@ -206,6 +206,46 @@ def format_ingredient(value, item_map, by_group, max_group_members=3):
     return f"{count} × {label}" if count and count > 1 else label
 
 
+def item_image(name, item_map, image_base):
+    item = item_map.get(name) or {}
+    image = item.get("inventory_image") or ""
+    mod = item.get("mod") or "unknown"
+
+    if not image or not image_base:
+        return ""
+
+    image_url = (
+        image_base.rstrip("/") + "/" +
+        str(mod).strip("/") + "/" +
+        image.lstrip("/")
+    )
+
+    return (
+        f'<img src="{esc(image_url)}" alt="" loading="lazy" '
+        f'style="width:36px;height:36px;object-fit:contain;vertical-align:middle" '
+        f'onerror="this.hidden=true">'
+    )
+
+
+def render_ingredient(value, item_map, by_group, image_base):
+    if not value:
+        return ""
+
+    if isinstance(value, str) and value.startswith("group:"):
+        return esc(format_ingredient(value, item_map, by_group))
+
+    name, count = parse_stack(value)
+    label = item_label(name, item_map)
+    image = item_image(name, item_map, image_base)
+    quantity = f'<small>{count} × </small>' if count and count > 1 else ""
+
+    return (
+        f'<span class="recipe-ingredient">'
+        f'{image}{quantity}{esc(label)}'
+        f'</span>'
+    )
+
+
 def recipe_description(recipe, item_map, by_group):
     method = recipe.get("method")
     ingredients = [x for x in safe_list(recipe.get("items")) if x]
@@ -225,7 +265,7 @@ def recipe_description(recipe, item_map, by_group):
     return ""
 
 
-def render_recipe(recipe, item_map, by_group, index, dependency_html=""):
+def render_recipe(recipe, item_map, by_group, index, image_base, dependency_html=""):
     method = recipe.get("method")
     output = recipe.get("output_item") or ""
     output_stack = recipe.get("output") or output
@@ -244,7 +284,13 @@ def render_recipe(recipe, item_map, by_group, index, dependency_html=""):
     description = recipe_description(recipe, item_map, by_group)
     method_label = "Crafting" if method == "normal" else "Cooking"
     html_parts = [f'<article id="recipe-{index}" class="recipe-card searchable" data-search="{esc(output + " " + title + " " + " ".join(str(x) for x in valid_ingredients))}">']
-    html_parts.append(f'<div class="recipe-head"><strong>{esc(title)}</strong><span class="tag">{esc(method_label)}</span></div>')
+    output_image = item_image(output, item_map, image_base)
+    html_parts.append(
+        f'<div class="recipe-head">'
+        f'<strong>{output_image}{esc(title)}</strong>'
+        f'<span class="tag">{esc(method_label)}</span></div>'
+    )
+
     if output_count and output_count > 1:
         html_parts.append(f'<p class="muted">Produces {output_count} items.</p>')
     html_parts.append(f'<p>{esc(description)}</p>')
@@ -255,17 +301,33 @@ def render_recipe(recipe, item_map, by_group, index, dependency_html=""):
             cells = []
             for value in ingredients:
                 if value:
-                    cells.append(f'<div class="craft-cell" title="{esc(value)}">{esc(format_ingredient(value, item_map, by_group))}</div>')
+                    #  cells.append(f'<div class="craft-cell" title="{esc(value)}">{esc(format_ingredient(value, item_map, by_group))}</div>')
+                    cells.append(
+                        f'<div class="craft-cell" title="{esc(value)}">'
+                        f'{render_ingredient(value, item_map, by_group, image_base)}'
+                        f'</div>'
+                    )
                 else:
                     cells.append('<div class="craft-cell empty">&nbsp;</div>')
             while len(cells) % width:
                 cells.append('<div class="craft-cell empty">&nbsp;</div>')
             html_parts.append(f'<div class="craft-grid" style="--grid-width:{width}">{"".join(cells)}</div>')
         else:
-            html_parts.append('<div class="ingredient-list">' + ''.join(f'<span class="ingredient">{esc(format_ingredient(x, item_map, by_group))}</span>' for x in valid_ingredients) + '</div>')
+            #  html_parts.append('<div class="ingredient-list">' + ''.join(f'<span class="ingredient">{esc(format_ingredient(x, item_map, by_group))}</span>' for x in valid_ingredients) + '</div>')
+            html_parts.append(
+                '<div class="ingredient-list">' +
+                ''.join(
+                    f'<span class="ingredient">{render_ingredient(x, item_map, by_group, image_base)}</span>'
+                    for x in valid_ingredients
+                ) +
+                '</div>'
+            )
     elif method == "cooking":
         source = recipe.get("cook_input") or (valid_ingredients[0] if valid_ingredients else "")
-        html_parts.append(f'<p><b>Input:</b> {esc(format_ingredient(source, item_map, by_group))}</p>')
+        #  html_parts.append(f'<p><b>Input:</b> {esc(format_ingredient(source, item_map, by_group))}</p>')
+        html_parts.append(
+            f'<p><b>Input:</b> {render_ingredient(source, item_map, by_group, image_base)}</p>'
+        )
         t = recipe.get("cook_time_seconds")
         html_parts.append(f'<p><b>Cooking time:</b> {esc(number(t) + " seconds" if isinstance(t, (int, float)) else "Not available in export")}</p>')
     if dependency_html:
@@ -443,8 +505,10 @@ def main():
             item_rows.append({"category": cat.replace("_", " ").title(),
                               "html": item_details(item, item_map, by_output, by_group, image_base, recipe_anchor_map)})
 
-    recipe_html = [render_recipe(r, item_map, by_group, i) for i, r in enumerate(all_valid)]
-    fuel_html = [render_recipe(r, item_map, by_group, i) for i, r in enumerate(fuels)]
+    #  recipe_html = [render_recipe(r, item_map, by_group, i) for i, r in enumerate(all_valid)]
+    #  fuel_html = [render_recipe(r, item_map, by_group, i) for i, r in enumerate(fuels)]
+    recipe_html = [render_recipe(r, item_map, by_group, i, image_base) for i, r in enumerate(all_valid)]
+    fuel_html = [render_recipe(r, item_map, by_group, i, image_base) for i, r in enumerate(fuels)]
 
     entity_rows = []
     for entity in sorted(entities, key=lambda x: x.get("name", "")):
