@@ -558,7 +558,7 @@ def main():
       while (s && s.position <= targetIndex && s.position < s.rows.length) appendBatch('recipes');
       const target = document.getElementById(hash);
       if (target) requestAnimationFrame(() => {{
-        const top = target.getBoundingClientRect().top + window.scrollY - 20;
+        const top = target.getBoundingClientRect().top + window.scrollY - 120;
         window.scrollTo({{top: top, behavior: 'smooth'}});
       }});
       return;
