@@ -488,6 +488,7 @@ def main():
 <section id="fuel"><h2>Fuel guide</h2><p class="intro">Fuel burn times are the exported duration for one fuel item.</p><div class="section-status">Open Fuel to load fuel data.</div><div class="section-content recipe-grid"></div></section>
 <section id="entities"><h2>Creatures and registered entities</h2><p class="intro">Some registered entities are technical objects, projectiles or effects rather than creatures. Values are shown only when present in the export.</p><div class="section-status">Open Creatures &amp; entities to load the list.</div><div class="section-content"><table><thead><tr><th>Entity</th><th>Mod</th><th>Health</th><th>Armor groups</th><th>Drops</th><th>Physical</th></tr></thead><tbody class="entity-rows"></tbody></table></div></section>
 </main><footer>Generated from {esc(source.name)} · No external JavaScript or CSS libraries are used. Data is fetched automatically after the page shell loads.</footer>
+<button type="button" id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
 <script>
 (() => {{
   const batchSize = 50;
@@ -620,6 +621,16 @@ def main():
         }}
       }} catch(error) {{ console.error(error); }}
     }}, 180);
+  }});
+  const backToTop = document.getElementById('back-to-top');
+  const toggleBackToTop = () => {{
+    if (window.scrollY > 400) backToTop.classList.add('visible');
+    else backToTop.classList.remove('visible');
+  }};
+  window.addEventListener('scroll', toggleBackToTop, {{ passive: true }});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => {{
+    window.scrollTo({{ top: 0, behavior: 'smooth' }});
   }});
 }})();
 </script></body></html>'''
