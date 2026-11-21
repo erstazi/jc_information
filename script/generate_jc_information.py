@@ -419,11 +419,6 @@ def main():
         categories[cat].append(item)
 
     outdir.mkdir(parents=True, exist_ok=True)
-    css_source = Path(__file__).with_name("style.css")
-    if not css_source.is_file():
-        raise SystemExit(f"Missing stylesheet: {css_source}")
-    import shutil
-    shutil.copyfile(css_source, outdir / "style.css")
     image_base = args.image_base
 
     # Pre-render the existing detailed markup into small, separately fetched datasets.
@@ -468,7 +463,7 @@ def main():
     page = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Player reference for items, weapons, tools, armor, crafting, cooking, fuel and creatures in JustCraft.">
-<title>JustCraft Player Handbook</title><link rel="stylesheet" href="style.css"></head><body>
+<title>JustCraft Player Handbook</title><link rel="stylesheet" href="https://game.dssapp.us/justcraft/info/style.css"></head><body>
 <header><h1>JustCraft Player Handbook</h1><p>Items, equipment, crafting, cooking, fuel and creatures from the live server export.</p></header>
 <main class="wrap"><div class="stats"><div class="stat"><b>{len(items):,}</b>Items</div><div class="stat"><b>{len(weapons):,}</b>Weapon damage entries</div><div class="stat"><b>{len(tools):,}</b>Tool capability entries</div><div class="stat"><b>{len(armor):,}</b>Armor value entries</div><div class="stat"><b>{len(valid_normal):,}</b>Crafting recipes</div><div class="stat"><b>{len(entities):,}</b>Entities</div></div>
 <p class="muted">Game: {esc(title)} · Exported: {esc(generated)} · Schema: {esc(data.get('schema_version'))}</p>
@@ -707,3 +702,4 @@ def _render_armor_only(armor, item_map):
 
 if __name__ == "__main__":
     main()
+
